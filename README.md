@@ -1,1 +1,1 @@
-# bpmn-examples
+# bpm-examples
