@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 
 @Configuration
-@ConditionalOnProperty(value = "process-bootstrap", matchIfMissing = true)
+@ConditionalOnProperty(value = "app.process-bootstrap", matchIfMissing = true)
 public class ProcessBootstrap {
 
   @Autowired

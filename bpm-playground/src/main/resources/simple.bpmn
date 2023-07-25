@@ -8,7 +8,7 @@
       <bpmn:incoming>Flow_05u7y74</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1uf11mp" sourceRef="StartEvent" targetRef="Activity_06cfeaj" />
-    <bpmn:userTask id="Activity_06cfeaj" name="Approve&#10;">
+    <bpmn:userTask id="Activity_06cfeaj" name="Approve">
       <bpmn:incoming>Flow_1uf11mp</bpmn:incoming>
       <bpmn:outgoing>Flow_05u7y74</bpmn:outgoing>
     </bpmn:userTask>
