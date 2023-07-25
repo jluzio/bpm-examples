@@ -5,6 +5,7 @@ import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeS
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
@@ -82,6 +83,36 @@ class SubProcessesWithSignalTest {
 
     complete(task("ValidateTasks", mainTaskInstance));
     assertThat(mainTaskInstance)
+        .isEnded();
+  }
+
+  @Test
+  @Deployment(resources = "subProcessesWithSignal.bpmn")
+  void test_broadcast() {
+    var mainTaskInstance1 = runtimeService().startProcessInstanceByKey("SignalMainTask");
+    log.debug("{}", mainTaskInstance1);
+    assertThat(mainTaskInstance1)
+        .isActive();
+
+    var mainTaskInstance2 = runtimeService().startProcessInstanceByKey("SignalMainTask");
+    log.debug("{}", mainTaskInstance2);
+    assertThat(mainTaskInstance2)
+        .isActive();
+
+    Stream.of("Task1Signal", "Task2Signal").forEach(it ->
+        runtimeService().createSignalEvent(it).send());
+
+    assertThat(mainTaskInstance1)
+        .isWaitingAt("ValidateTasks");
+    assertThat(mainTaskInstance2)
+        .isWaitingAt("ValidateTasks");
+
+    complete(task("ValidateTasks", mainTaskInstance1));
+    assertThat(mainTaskInstance1)
+        .isEnded();
+
+    complete(task("ValidateTasks", mainTaskInstance2));
+    assertThat(mainTaskInstance2)
         .isEnded();
   }
 

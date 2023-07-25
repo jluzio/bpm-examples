@@ -6,31 +6,38 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complet
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 
 import lombok.extern.slf4j.Slf4j;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
-@ExtendWith(ProcessEngineExtension.class)
+@SpringBootTest
 @Slf4j
-class SubProcessesWithMessageTest {
+class SubProcessesWithMessageSpringBootTest {
+
+  @Autowired
+  RuntimeService runtimeService;
 
   @Test
-  @Deployment(resources = "subProcessesWithMessage.bpmn")
   void test_default() {
-    var mainTaskInstance = runtimeService().startProcessInstanceByKey("MessageMainTask");
+    var mainTaskInstance = runtimeService.startProcessInstanceByKey("MessageMainTask");
     log.debug("{}", mainTaskInstance);
     assertThat(mainTaskInstance)
         .isActive()
         .isWaitingFor("Task1Message", "Task2Message");
 
-    var task1Instance = runtimeService().startProcessInstanceByKey("MessageTask1");
+    var task1Instance = runtimeService.startProcessInstanceByKey("MessageTask1");
     log.debug("{}", task1Instance);
     assertThat(task1Instance)
         .isActive()
         .isWaitingAt("ApproveTask1");
 
-    var task2Instance = runtimeService().startProcessInstanceByKey("MessageTask2");
+    var task2Instance = runtimeService.startProcessInstanceByKey("MessageTask2");
     log.debug("{}", task2Instance);
     assertThat(task2Instance)
         .isActive()
@@ -43,30 +50,6 @@ class SubProcessesWithMessageTest {
     complete(task("ApproveTask2", task2Instance));
     assertThat(task2Instance)
         .isEnded();
-
-    assertThat(mainTaskInstance)
-        .isWaitingAt("ValidateTasks");
-
-    complete(task("ValidateTasks", mainTaskInstance));
-    assertThat(mainTaskInstance)
-        .isEnded();
-  }
-
-  @Test
-  @Deployment(resources = "subProcessesWithMessage.bpmn")
-  void test_external_messages() {
-    var mainTaskInstance = runtimeService().startProcessInstanceByKey("MessageMainTask");
-    log.debug("{}", mainTaskInstance);
-    assertThat(mainTaskInstance)
-        .isActive()
-        .isWaitingFor("Task1Message", "Task2Message");
-
-    runtimeService().createMessageCorrelation("Task1Message")
-        .processInstanceId(mainTaskInstance.getProcessInstanceId())
-        .correlate();
-    runtimeService().createMessageCorrelation("Task2Message")
-        .processInstanceId(mainTaskInstance.getProcessInstanceId())
-        .correlate();
 
     assertThat(mainTaskInstance)
         .isWaitingAt("ValidateTasks");
