@@ -18,18 +18,18 @@ class SubProcessesWithSignalTest {
   @Test
   @Deployment(resources = "subProcessesWithSignal.bpmn")
   void test_default() {
-    var mainTaskInstance = runtimeService().startProcessInstanceByKey("MainTask");
+    var mainTaskInstance = runtimeService().startProcessInstanceByKey("SignalMainTask");
     log.debug("{}", mainTaskInstance);
     assertThat(mainTaskInstance)
         .isActive();
 
-    var task1Instance = runtimeService().startProcessInstanceByKey("Task1");
+    var task1Instance = runtimeService().startProcessInstanceByKey("SignalTask1");
     log.debug("{}", task1Instance);
     assertThat(task1Instance)
         .isActive()
         .isWaitingAt("ApproveTask1");
 
-    var task2Instance = runtimeService().startProcessInstanceByKey("Task2");
+    var task2Instance = runtimeService().startProcessInstanceByKey("SignalTask2");
     log.debug("{}", task2Instance);
     assertThat(task2Instance)
         .isActive()
@@ -54,18 +54,18 @@ class SubProcessesWithSignalTest {
   @Test
   @Deployment(resources = "subProcessesWithSignal.bpmn")
   void test_with_manual_signal() {
-    var mainTaskInstance = runtimeService().startProcessInstanceByKey("MainTask");
+    var mainTaskInstance = runtimeService().startProcessInstanceByKey("SignalMainTask");
     log.debug("{}", mainTaskInstance);
     assertThat(mainTaskInstance)
         .isActive();
 
-    var task1Instance = runtimeService().startProcessInstanceByKey("Task1");
+    var task1Instance = runtimeService().startProcessInstanceByKey("SignalTask1");
     log.debug("{}", task1Instance);
     assertThat(task1Instance)
         .isActive()
         .isWaitingAt("ApproveTask1");
 
-    var task2Instance = runtimeService().startProcessInstanceByKey("Task2");
+    var task2Instance = runtimeService().startProcessInstanceByKey("SignalTask2");
     log.debug("{}", task2Instance);
     assertThat(task2Instance)
         .isActive()

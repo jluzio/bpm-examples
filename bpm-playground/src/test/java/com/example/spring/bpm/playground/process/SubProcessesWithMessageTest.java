@@ -23,19 +23,19 @@ class SubProcessesWithMessageTest {
   @Test
   @Deployment(resources = "subProcessesWithMessage.bpmn")
   void test() {
-    var mainTaskInstance = runtimeService().startProcessInstanceByKey("MainTask");
+    var mainTaskInstance = runtimeService().startProcessInstanceByKey("MessageMainTask");
     log.debug("{}", mainTaskInstance);
     assertThat(mainTaskInstance)
         .isActive()
         .isWaitingFor("Task1Message", "Task2Message");
 
-    var task1Instance = runtimeService().startProcessInstanceByKey("Task1");
+    var task1Instance = runtimeService().startProcessInstanceByKey("MessageTask1");
     log.debug("{}", task1Instance);
     assertThat(task1Instance)
         .isActive()
         .isWaitingAt("ApproveTask1");
 
-    var task2Instance = runtimeService().startProcessInstanceByKey("Task2");
+    var task2Instance = runtimeService().startProcessInstanceByKey("MessageTask2");
     log.debug("{}", task2Instance);
     assertThat(task2Instance)
         .isActive()
