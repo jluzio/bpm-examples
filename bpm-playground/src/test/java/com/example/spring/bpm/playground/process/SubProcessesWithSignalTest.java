@@ -116,4 +116,38 @@ class SubProcessesWithSignalTest {
         .isEnded();
   }
 
+  @Test
+  @Deployment(resources = "subProcessesWithSignal.bpmn")
+  void test_send_to_target() {
+    var mainTaskInstance1 = runtimeService().startProcessInstanceByKey("SignalMainTask");
+    log.debug("{}", mainTaskInstance1);
+    assertThat(mainTaskInstance1)
+        .isActive();
+
+    var mainTaskInstance2 = runtimeService().startProcessInstanceByKey("SignalMainTask");
+    log.debug("{}", mainTaskInstance2);
+    assertThat(mainTaskInstance2)
+        .isActive();
+
+    Stream.of("Task1Signal", "Task2Signal").forEach(it -> {
+      var mainTask1Execution = runtimeService().createExecutionQuery()
+          .signalEventSubscriptionName(it)
+          .processInstanceId(mainTaskInstance1.getProcessInstanceId())
+          .singleResult();
+      runtimeService()
+          .createSignalEvent(it)
+          .executionId(mainTask1Execution.getId())
+          .send();
+    });
+
+    assertThat(mainTaskInstance1)
+        .isWaitingAt("ValidateTasks");
+    assertThat(mainTaskInstance2)
+        .isNotWaitingAt("ValidateTasks");
+
+    complete(task("ValidateTasks", mainTaskInstance1));
+    assertThat(mainTaskInstance1)
+        .isEnded();
+  }
+
 }
