@@ -150,4 +150,19 @@ class SubProcessesWithSignalTest {
         .isEnded();
   }
 
+  @Test
+  @Deployment(resources = "subProcessesWithSignal.bpmn")
+  void test_send_timing() {
+    Stream.of("Task1Signal", "Task2Signal").forEach(it ->
+        runtimeService().createSignalEvent(it).send());
+
+    var mainTaskInstance1 = runtimeService().startProcessInstanceByKey("SignalMainTask");
+    log.debug("{}", mainTaskInstance1);
+    assertThat(mainTaskInstance1)
+        .isActive();
+
+    assertThat(mainTaskInstance1)
+        .isNotWaitingAt("ValidateTasks");
+  }
+
 }
