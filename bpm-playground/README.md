@@ -1,8 +1,12 @@
 # Camunda BPMN
 
 ## Docs
-- https://docs.camunda.org/manual/7.19/user-guide/testing/
-- https://docs.camunda.org/manual/7.19/user-guide/testing/assert-examples/
+- https://docs.camunda.org/manual/7.19/
+  - https://docs.camunda.org/manual/7.19/user-guide/
+  - https://docs.camunda.org/manual/7.19/reference/bpmn20/
+- Testing
+  - https://docs.camunda.org/manual/7.19/user-guide/testing/
+  - https://docs.camunda.org/manual/7.19/user-guide/testing/assert-examples/
 
 ## REST API
 - https://docs.camunda.org/manual/7.19/reference/rest/
