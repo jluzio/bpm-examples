@@ -18,7 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class SimpleProcessTest {
 
   @Test
-  @Deployment(resources = "simple.bpmn")
+  @Deployment(resources = "processes/simple.bpmn")
   void test() {
     var processInstance = runtimeService().startProcessInstanceByKey("SimpleProcess");
     log.debug("{}", processInstance);

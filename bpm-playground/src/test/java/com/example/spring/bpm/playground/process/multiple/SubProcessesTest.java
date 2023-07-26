@@ -1,9 +1,8 @@
-package com.example.spring.bpm.playground.process;
+package com.example.spring.bpm.playground.process.multiple;
 
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.processInstanceQuery;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskQuery;
 
@@ -22,9 +21,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class SubProcessesTest {
 
   @Test
-  @Deployment(resources = "subProcesses.bpmn")
-  void test() {
-    var processInstance = runtimeService().startProcessInstanceByKey("SubProcesses");
+  @Deployment(resources = "processes/multiple/sub-processes.bpmn")
+  void success() {
+    var processInstance = runtimeService().startProcessInstanceByKey("SubProcesses", "test");
     log.debug("{}", processInstance);
     assertThat(processInstance)
         .isActive()
@@ -47,7 +46,26 @@ class SubProcessesTest {
 
     complete(task());
 
-    assertThat(processInstance).isEnded();
+    assertThat(processInstance)
+        .isEnded()
+        .hasPassed("SuccessEndEvent");
+  }
+
+  @Test
+  @Deployment(resources = "processes/multiple/sub-processes.bpmn")
+  void error() {
+    var processInstance = runtimeService().startProcessInstanceByKey("SubProcesses", "error");
+    log.debug("{}", processInstance);
+    assertThat(processInstance)
+        .isActive()
+        .hasPassed("StartEvent")
+        .isWaitingAt("ReportError");
+
+    complete(task());
+
+    assertThat(processInstance)
+        .isEnded()
+        .hasPassed("ErrorEndEvent");
   }
 
 }

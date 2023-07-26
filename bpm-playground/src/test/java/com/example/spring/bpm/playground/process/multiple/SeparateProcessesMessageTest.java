@@ -1,4 +1,4 @@
-package com.example.spring.bpm.playground.process;
+package com.example.spring.bpm.playground.process.multiple;
 
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeService;
@@ -13,10 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
-class SubProcessesWithMessageTest {
+class SeparateProcessesMessageTest {
 
   @Test
-  @Deployment(resources = "subProcessesWithMessage.bpmn")
+  @Deployment(resources = "processes/multiple/separate-processes-message.bpmn")
   void test_default() {
     var businessKey = "main-task-1";
 
@@ -55,7 +55,7 @@ class SubProcessesWithMessageTest {
   }
 
   @Test
-  @Deployment(resources = "subProcessesWithMessage.bpmn")
+  @Deployment(resources = "processes/multiple/separate-processes-message.bpmn")
   void test_external_messages() {
     var mainTaskInstance = runtimeService().startProcessInstanceByKey("MessageMainTask");
     log.debug("{}", mainTaskInstance);

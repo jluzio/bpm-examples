@@ -1,4 +1,4 @@
-package com.example.spring.bpm.playground.process;
+package com.example.spring.bpm.playground.process.multiple;
 
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeService;
@@ -14,10 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
-class SubProcessesWithSignalTest {
+class SeparateProcessesSignalTest {
 
   @Test
-  @Deployment(resources = "subProcessesWithSignal.bpmn")
+  @Deployment(resources = "processes/multiple/separate-processes-signal.bpmn")
   void test_default() {
     var mainTaskInstance = runtimeService().startProcessInstanceByKey("SignalMainTask");
     log.debug("{}", mainTaskInstance);
@@ -53,7 +53,7 @@ class SubProcessesWithSignalTest {
   }
 
   @Test
-  @Deployment(resources = "subProcessesWithSignal.bpmn")
+  @Deployment(resources = "processes/multiple/separate-processes-signal.bpmn")
   void test_with_manual_signal() {
     var mainTaskInstance = runtimeService().startProcessInstanceByKey("SignalMainTask");
     log.debug("{}", mainTaskInstance);
@@ -87,7 +87,7 @@ class SubProcessesWithSignalTest {
   }
 
   @Test
-  @Deployment(resources = "subProcessesWithSignal.bpmn")
+  @Deployment(resources = "processes/multiple/separate-processes-signal.bpmn")
   void test_broadcast() {
     var mainTaskInstance1 = runtimeService().startProcessInstanceByKey("SignalMainTask");
     log.debug("{}", mainTaskInstance1);
@@ -117,7 +117,7 @@ class SubProcessesWithSignalTest {
   }
 
   @Test
-  @Deployment(resources = "subProcessesWithSignal.bpmn")
+  @Deployment(resources = "processes/multiple/separate-processes-signal.bpmn")
   void test_send_to_target() {
     var mainTaskInstance1 = runtimeService().startProcessInstanceByKey("SignalMainTask");
     log.debug("{}", mainTaskInstance1);
@@ -151,7 +151,7 @@ class SubProcessesWithSignalTest {
   }
 
   @Test
-  @Deployment(resources = "subProcessesWithSignal.bpmn")
+  @Deployment(resources = "processes/multiple/separate-processes-signal.bpmn")
   void test_send_timing() {
     Stream.of("Task1Signal", "Task2Signal").forEach(it ->
         runtimeService().createSignalEvent(it).send());
