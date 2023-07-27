@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1oic086" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.13.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="ChoiceProcess" isExecutable="true">
+    <bpmn:startEvent id="StartEvent">
+      <bpmn:outgoing>Flow_1uf11mp</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="AcceptedEvent" name="Accepted">
+      <bpmn:incoming>Flow_00xfbmd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Approve" name="Approve" camunda:assignee="${currentUser()}">
+      <bpmn:incoming>Flow_1uf11mp</bpmn:incoming>
+      <bpmn:outgoing>Flow_05u7y74</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1uf11mp" sourceRef="StartEvent" targetRef="Approve" />
+    <bpmn:sequenceFlow id="Flow_05u7y74" sourceRef="Approve" targetRef="Gateway_1hdu3u2" />
+    <bpmn:exclusiveGateway id="Gateway_1hdu3u2" default="Flow_13k5vnh">
+      <bpmn:incoming>Flow_05u7y74</bpmn:incoming>
+      <bpmn:outgoing>Flow_00xfbmd</bpmn:outgoing>
+      <bpmn:outgoing>Flow_13k5vnh</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_00xfbmd" sourceRef="Gateway_1hdu3u2" targetRef="AcceptedEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status == 'APPROVED'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="RejectedEvent" name="Rejected">
+      <bpmn:incoming>Flow_13k5vnh</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_13k5vnh" sourceRef="Gateway_1hdu3u2" targetRef="RejectedEvent" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ChoiceProcess">
+      <bpmndi:BPMNShape id="BPMNShape_0fb2dqx" bpmnElement="StartEvent">
+        <dc:Bounds x="162" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hl01k4_di" bpmnElement="Approve">
+        <dc:Bounds x="283" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_106jb6z_di" bpmnElement="AcceptedEvent">
+        <dc:Bounds x="562" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="559" y="145" width="46" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1hdu3u2_di" bpmnElement="Gateway_1hdu3u2" isMarkerVisible="true">
+        <dc:Bounds x="445" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1oxo6mz_di" bpmnElement="RejectedEvent">
+        <dc:Bounds x="562" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="559" y="255" width="44" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1uf11mp_di" bpmnElement="Flow_1uf11mp">
+        <di:waypoint x="198" y="120" />
+        <di:waypoint x="283" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05u7y74_di" bpmnElement="Flow_05u7y74">
+        <di:waypoint x="383" y="120" />
+        <di:waypoint x="445" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00xfbmd_di" bpmnElement="Flow_00xfbmd">
+        <di:waypoint x="495" y="120" />
+        <di:waypoint x="562" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13k5vnh_di" bpmnElement="Flow_13k5vnh">
+        <di:waypoint x="470" y="145" />
+        <di:waypoint x="470" y="230" />
+        <di:waypoint x="562" y="230" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
