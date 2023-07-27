@@ -5,14 +5,10 @@ import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeS
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.junit.jupiter.api.Test;
@@ -24,19 +20,12 @@ class BeanExpressionTest {
 
   static TaskBean taskBean = Mockito.spy(new TaskBean());
 
-  static ProcessEngine processEngine() {
-    StandaloneInMemProcessEngineConfiguration config = (StandaloneInMemProcessEngineConfiguration) ProcessEngineConfiguration
-        .createStandaloneInMemProcessEngineConfiguration();
-    config.setBeans(new HashMap<>(Map.of("taskBean", taskBean)));
-    return config
-        .setJdbcUrl("jdbc:h2:mem:camunda;DB_CLOSE_DELAY=1000")
-        .buildProcessEngine();
-  };
-
   @RegisterExtension
   ProcessEngineExtension extension = ProcessEngineExtension
       .builder()
-      .useProcessEngine(processEngine())
+      .useProcessEngine(TestBpmConfig.processEngine(
+          Map.of("taskBean", taskBean)
+      ))
       .build();
 
   static class TaskBean implements JavaDelegate {
