@@ -10,15 +10,18 @@ import org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration
 public class TestBpmConfig {
 
   public static ProcessEngine processEngine(Map<Object, Object> beans) {
-    HashMap<Object, Object> mutableBeans = Optional.ofNullable(beans)
-        .map(HashMap::new)
-        .orElse(null);
-
     StandaloneInMemProcessEngineConfiguration config = (StandaloneInMemProcessEngineConfiguration) ProcessEngineConfiguration
         .createStandaloneInMemProcessEngineConfiguration();
-    config.setBeans(mutableBeans);
+    config.setBeans(beans);
     return config
         .setJdbcUrl("jdbc:h2:mem:camunda;DB_CLOSE_DELAY=1000")
         .buildProcessEngine();
   }
+
+  public static Map<Object, Object> copyToMutableMap(Map<Object, Object> beans) {
+    return Optional.ofNullable(beans)
+        .map(HashMap::new)
+        .orElse(null);
+  }
+
 }
