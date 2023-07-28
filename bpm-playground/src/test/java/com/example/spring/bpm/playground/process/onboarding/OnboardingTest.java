@@ -2,6 +2,7 @@ package com.example.spring.bpm.playground.process.onboarding;
 
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.AML_HITS_RESULT_RECEIVED_EVENT;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.DATA_COMPLETE_EVENT;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.REJECTED_ERROR;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.AGGREGATE_RESULT;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.FORM_KEY;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.STATUS;
@@ -9,6 +10,7 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertT
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 import com.example.spring.bpm.playground.process.onboarding.ProcessData.ProcessId;
@@ -17,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.spring.boot.starter.CamundaBpmAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +91,30 @@ class OnboardingTest {
     assertThat(processInstance)
         .hasPassed("ValidateProcess", "IngestUser", "OnboardingDoneEndEvent")
         .isEnded();
+  }
+
+
+  @Test
+  void error_rejected_event() throws Exception {
+    doThrow(new BpmnError("RejectedError", "Rejected Error"))
+        .when(processService).requiresAmlHits(any());
+
+    String businessKey = UUID.randomUUID().toString();
+    var processInstance = runtimeService.startProcessInstanceByKey(
+        ProcessId.ONBOARDING,
+        businessKey,
+        Map.of(FORM_KEY, "")
+    );
+    log.debug("{}", processInstance);
+
+//    assertThat(processInstance)
+//        .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
+//    verify(processService).requiresAmlHits(any());
+
+    assertThat(processInstance)
+        .hasPassed("RejectedEndEvent")
+        .isEnded();
+    verify(processService).processRejectedEvent(any());
   }
 
 }

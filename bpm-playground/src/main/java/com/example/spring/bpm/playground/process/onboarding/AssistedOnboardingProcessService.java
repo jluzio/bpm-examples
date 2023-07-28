@@ -51,6 +51,14 @@ public class AssistedOnboardingProcessService {
         .correlate();
   }
 
+  public void processRejectedEvent(DelegateExecution execution) {
+    log.info("processRejectedEvent: {}", execution);
+  }
+
+  public void processErrorEvent(DelegateExecution execution) {
+    log.info("processErrorEvent: {}", execution);
+  }
+
   private void setDefaultValueIfAbsent(DelegateExecution execution, String variableName,
       Object defaultValue) {
     Object currentValue = execution.getVariable(variableName);

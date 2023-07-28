@@ -38,7 +38,7 @@
     <bpmn:subProcess id="Activity_1erkfa8" triggeredByEvent="true">
       <bpmn:startEvent id="Event_06xo68u" name="Rejected Event">
         <bpmn:outgoing>Flow_0h23i62</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_1uwq8gq" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1uwq8gq" errorRef="Error_0eup6g2" />
       </bpmn:startEvent>
       <bpmn:intermediateThrowEvent id="RejectedEndEvent" name="Rejected">
         <bpmn:incoming>Flow_0cav1d1</bpmn:incoming>
@@ -53,7 +53,7 @@
     <bpmn:subProcess id="Activity_06bztw0" triggeredByEvent="true">
       <bpmn:startEvent id="Event_0oof4xj" name="Error Event">
         <bpmn:outgoing>Flow_15fbfi5</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0k1sig6" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0k1sig6" errorRef="Error_176rxq1" />
       </bpmn:startEvent>
       <bpmn:intermediateThrowEvent id="ErrorEndEvent" name="Error">
         <bpmn:incoming>Flow_0ehv4qc</bpmn:incoming>
@@ -308,6 +308,8 @@
     </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:message id="Message_11dm0oo" name="DataCompleteEvent" />
+  <bpmn:error id="Error_0eup6g2" name="RejectedError" />
+  <bpmn:error id="Error_176rxq1" name="Error" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0vwvgwu">
       <bpmndi:BPMNShape id="Participant_0ebmcch_di" bpmnElement="Participant_0ebmcch" isHorizontal="true">

@@ -16,6 +16,8 @@ public class ProcessData {
 
     public static final String AML_HITS_RESULT_RECEIVED_EVENT = "AmlHitsResultReceivedEvent";
     public static final String DATA_COMPLETE_EVENT = "DataCompleteEvent";
+    public static final String REJECTED_ERROR = "RejectedError";
+    public static final String ERROR = "Error";
   }
 
   @UtilityClass
