@@ -5,28 +5,21 @@ import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeS
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
+import org.camunda.bpm.engine.test.mock.Mocks;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @Slf4j
+@ExtendWith({ProcessEngineExtension.class, MockitoExtension.class})
 class BeanExpressionTest {
-
-  TaskBean taskBean = Mockito.spy(new TaskBean());
-
-  @RegisterExtension
-  ProcessEngineExtension extension = ProcessEngineExtension
-      .builder()
-      .useProcessEngine(TestBpmConfig.processEngine(Map.of(
-          "taskBean", taskBean
-      )))
-      .build();
 
   static class TaskBean implements JavaDelegate {
 
@@ -34,6 +27,14 @@ class BeanExpressionTest {
     public void execute(DelegateExecution execution) throws Exception {
       log.info("execute: {}", execution);
     }
+  }
+
+  @Spy
+  TaskBean taskBean = new TaskBean();
+
+  @BeforeEach
+  void setup() {
+    Mocks.register("taskBean", taskBean);
   }
 
   @Test

@@ -11,7 +11,7 @@
   <bpmn:process id="SendDataCompleteEvent" isExecutable="true">
     <bpmn:sequenceFlow id="Flow_0mlqbxv" sourceRef="Activity_0wsuaim" targetRef="Event_0e5m5c5" />
     <bpmn:sequenceFlow id="Flow_0f6505y" sourceRef="Event_0eced6x" targetRef="Activity_0wsuaim" />
-    <bpmn:serviceTask id="Activity_0wsuaim" name="Send Message" camunda:expression="${assistedOnboardingProcessService.sendMessage(execution, &#39;DataCompleteEvent&#39;)}">
+    <bpmn:serviceTask id="Activity_0wsuaim" name="Send Message" camunda:expression="${onboardingHelperProcessService.sendMessage(execution, &#39;DataCompleteEvent&#39;)}">
       <bpmn:incoming>Flow_0f6505y</bpmn:incoming>
       <bpmn:outgoing>Flow_0mlqbxv</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -29,7 +29,7 @@
     <bpmn:endEvent id="Event_0qvmgeb">
       <bpmn:incoming>Flow_1p6dbxf</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="Activity_0gc4gv4" name="Send Message" camunda:expression="${assistedOnboardingProcessService.sendMessage(execution, &#39;AmlHitsResultReceivedEvent&#39;)}">
+    <bpmn:serviceTask id="Activity_0gc4gv4" name="Send Message" camunda:expression="${onboardingHelperProcessService.sendMessage(execution, &#39;AmlHitsResultReceivedEvent&#39;)}">
       <bpmn:incoming>Flow_1jajxvt</bpmn:incoming>
       <bpmn:outgoing>Flow_1p6dbxf</bpmn:outgoing>
     </bpmn:serviceTask>

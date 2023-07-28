@@ -10,7 +10,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.spring.boot.starter.CamundaBpmAutoConfiguration;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
+import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,8 @@ import org.springframework.stereotype.Component;
     CamundaBpmAutoConfiguration.class,
     SpringBeanExpressionTest.TaskBean.class
 })
-@AutoConfigureDataJpa
+@AutoConfigureDataJdbc
+//@AutoConfigureDataJpa
 @Slf4j
 class SpringBeanExpressionTest {
 

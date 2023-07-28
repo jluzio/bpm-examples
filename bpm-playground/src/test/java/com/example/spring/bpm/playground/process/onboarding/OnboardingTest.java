@@ -2,14 +2,20 @@ package com.example.spring.bpm.playground.process.onboarding;
 
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.AML_HITS_RESULT_RECEIVED_EVENT;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.DATA_COMPLETE_EVENT;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.ERROR;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.REJECTED_ERROR;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.AGGREGATE_RESULT;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.FORM_KEY;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.STATUS;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.VALIDATE_ONBOARDING_USER;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableValue.AGGREGATE_RESULT_CLEAN_EDD;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableValue.AGGREGATE_RESULT_RED_FLAGGED;
+import static org.awaitility.Awaitility.await;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
@@ -20,101 +26,265 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.BpmnError;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.spring.boot.starter.CamundaBpmAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
+import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @SpringBootTest(classes = {
     CamundaBpmAutoConfiguration.class,
     OnboardingTest.Config.class
 })
-@AutoConfigureDataJpa
+@AutoConfigureDataJdbc
 @Slf4j
 class OnboardingTest {
 
-  @Configuration
-  @Import({AssistedOnboardingProcessService.class})
+  public static final String DEFAULT_USER = "admin";
+
+  @TestConfiguration
+  @Import({OnboardingProcessService.class})
   static class Config {
 
   }
 
   @SpyBean
-  AssistedOnboardingProcessService processService;
+  OnboardingProcessService processService;
   @Autowired
   RuntimeService runtimeService;
 
   @Test
-  void success_valid_customer() throws Exception {
-    String businessKey = UUID.randomUUID().toString();
-    var processInstance = runtimeService.startProcessInstanceByKey(
-        ProcessId.ONBOARDING,
-        businessKey,
-        Map.of(FORM_KEY, "")
-    );
-    log.debug("{}", processInstance);
+  void success_valid_customer() {
+    String businessKey = createBusinessKey();
+    var processInstance = createProcessInstance(businessKey);
+    log.debug("process[{}] :: {}", businessKey, processInstance);
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
     verify(processService).requiresAmlHits(any());
 
-    runtimeService.createMessageCorrelation(AML_HITS_RESULT_RECEIVED_EVENT)
-        .processInstanceBusinessKey(businessKey)
-        .setVariables(Map.of(
-            AGGREGATE_RESULT, VariableValue.AGGREGATE_RESULT_CLEAN
-        ))
-        .correlate();
+    sendAmlHitsResultReceivedEvent(businessKey, VariableValue.AGGREGATE_RESULT_CLEAN);
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT)
         .hasPassed("AmlHitsCustomerApprovedEndEvent");
+    verify(processService).amlHitsApprove(any());
 
-    runtimeService.createMessageCorrelation(DATA_COMPLETE_EVENT)
-        .processInstanceBusinessKey(businessKey)
-        .setVariables(Map.of(
-            "validateOnboardingUser", "admin"
-        ))
-        .correlate();
+    sendDataCompleteEvent(businessKey);
     assertThat(processInstance)
         .isWaitingAt("ValidateOnboardingCustomerServiceAgentApproval");
     verify(processService).requiresValidateOnboarding(any());
 
+    waitForTask(processInstance);
     complete(task(), Map.of(
         STATUS, VariableValue.STATUS_APPROVED
     ));
     assertThat(processInstance)
         .hasPassed("ValidateOnboardingCustomerApprovedEndEvent");
+    verify(processService).validateOnboardingApprove(any());
 
     assertThat(processInstance)
         .hasPassed("ValidateProcess", "IngestUser", "OnboardingDoneEndEvent")
         .isEnded();
+    verify(processService).validateProcess(any());
+    verify(processService).ingestCustomer(any());
   }
 
-
   @Test
-  void error_rejected_event() throws Exception {
-    doThrow(new BpmnError("RejectedError", "Rejected Error"))
+  void error_rejected_event() {
+    doReturn(false)
         .when(processService).requiresAmlHits(any());
+    doReturn(false)
+        .when(processService).requiresValidateOnboarding(any());
+    doThrow(new BpmnError(REJECTED_ERROR, "Rejected Error"))
+        .when(processService).validateProcess(any());
 
-    String businessKey = UUID.randomUUID().toString();
-    var processInstance = runtimeService.startProcessInstanceByKey(
-        ProcessId.ONBOARDING,
-        businessKey,
-        Map.of(FORM_KEY, "")
-    );
-    log.debug("{}", processInstance);
+    String businessKey = createBusinessKey();
+    var processInstance = createProcessInstance(businessKey);
+    log.debug("process[{}] :: {}", businessKey, processInstance);
 
-//    assertThat(processInstance)
-//        .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
-//    verify(processService).requiresAmlHits(any());
+    assertThat(processInstance)
+        .isWaitingFor(DATA_COMPLETE_EVENT);
+
+    sendDataCompleteEvent(businessKey);
 
     assertThat(processInstance)
         .hasPassed("RejectedEndEvent")
         .isEnded();
     verify(processService).processRejectedEvent(any());
+    verify(processService).amlHitsApprove(any());
+    verify(processService).validateOnboardingApprove(any());
+    verify(processService).validateProcess(any());
+  }
+
+  @Test
+  void error_event() {
+    doReturn(false)
+        .when(processService).requiresAmlHits(any());
+    doReturn(false)
+        .when(processService).requiresValidateOnboarding(any());
+    doThrow(new BpmnError(ERROR, "Some Error"))
+        .when(processService).validateProcess(any());
+
+    String businessKey = createBusinessKey();
+    var processInstance = createProcessInstance(businessKey);
+    log.debug("process[{}] :: {}", businessKey, processInstance);
+
+    assertThat(processInstance)
+        .isWaitingFor(DATA_COMPLETE_EVENT);
+
+    sendDataCompleteEvent(businessKey);
+
+    assertThat(processInstance)
+        .hasPassed("ErrorEndEvent")
+        .isEnded();
+    verify(processService).processErrorEvent(any());
+    verify(processService).amlHitsApprove(any());
+    verify(processService).validateOnboardingApprove(any());
+  }
+
+  @Test
+  void fail_validate_onboarding_reject() {
+    doReturn(false)
+        .when(processService).requiresAmlHits(any());
+    doReturn(false)
+        .when(processService).validateProcess(any());
+
+    String businessKey = createBusinessKey();
+    var processInstance = createProcessInstance(businessKey);
+    log.debug("process[{}] :: {}", businessKey, processInstance);
+
+    assertThat(processInstance)
+        .isWaitingFor(DATA_COMPLETE_EVENT);
+    verify(processService).amlHitsApprove(any());
+
+    sendDataCompleteEvent(businessKey);
+    assertThat(processInstance)
+        .isWaitingAt("ValidateOnboardingCustomerServiceAgentApproval");
+    verify(processService).requiresValidateOnboarding(any());
+
+    waitForTask(processInstance);
+    complete(task(), Map.of(
+        STATUS, VariableValue.STATUS_REJECTED
+    ));
+    assertThat(processInstance)
+        .hasPassed("ValidateOnboardingCustomerRejectedEndEvent");
+    verify(processService).validateOnboardingReject(any());
+
+    assertThat(processInstance)
+        .hasPassed("ValidateProcess", "OnboardingCustomerRejectedEndEvent")
+        .isEnded();
+  }
+
+  @Test
+  void fail_aml_hits_reject() {
+    doReturn(false)
+        .when(processService).requiresValidateOnboarding(any());
+    doReturn(false)
+        .when(processService).validateProcess(any());
+
+    String businessKey = createBusinessKey();
+    var processInstance = createProcessInstance(businessKey);
+    log.debug("process[{}] :: {}", businessKey, processInstance);
+
+    assertThat(processInstance)
+        .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
+
+    sendDataCompleteEvent(businessKey);
+    verify(processService).validateOnboardingApprove(any());
+
+    sendAmlHitsResultReceivedEvent(businessKey, AGGREGATE_RESULT_CLEAN_EDD);
+    assertThat(processInstance)
+        .isWaitingAt("AmlHitsCustomerServiceAgentApproval");
+
+    waitForTask(processInstance);
+    complete(task(), Map.of(
+        STATUS, VariableValue.STATUS_REJECTED
+    ));
+    assertThat(processInstance)
+        .hasPassed("AmlHitsCustomerRejectedEndEvent");
+    verify(processService).amlHitsReject(any());
+
+    assertThat(processInstance)
+        .hasPassed("ValidateProcess", "OnboardingCustomerRejectedEndEvent")
+        .isEnded();
+  }
+
+  @Test
+  void fail_aml_hits_red_flagged() {
+    doReturn(false)
+        .when(processService).requiresValidateOnboarding(any());
+    doReturn(false)
+        .when(processService).validateProcess(any());
+
+    String businessKey = createBusinessKey();
+    var processInstance = createProcessInstance(businessKey);
+    log.debug("process[{}] :: {}", businessKey, processInstance);
+
+    assertThat(processInstance)
+        .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
+
+    sendDataCompleteEvent(businessKey);
+    verify(processService).validateOnboardingApprove(any());
+
+    sendAmlHitsResultReceivedEvent(businessKey, AGGREGATE_RESULT_RED_FLAGGED);
+    assertThat(processInstance)
+        .hasPassed("AmlHitsCustomerRedFlaggedEndEvent");
+    verify(processService).amlHitsRedFlaggedReject(any());
+
+    assertThat(processInstance)
+        .hasPassed("ValidateProcess", "OnboardingCustomerRejectedEndEvent")
+        .isEnded();
+  }
+
+  private ProcessInstance createProcessInstance(String businessKey) {
+    return runtimeService.startProcessInstanceByKey(
+        ProcessId.ONBOARDING,
+        businessKey,
+        Map.of(FORM_KEY, "")
+    );
+  }
+
+  private void sendAmlHitsResultReceivedEvent(String businessKey, String value) {
+    runtimeService.createMessageCorrelation(AML_HITS_RESULT_RECEIVED_EVENT)
+        .processInstanceBusinessKey(businessKey)
+        .setVariables(Map.of(
+            AGGREGATE_RESULT, value
+        ))
+        .correlate();
+  }
+
+  private void sendDataCompleteEvent(String businessKey) {
+    runtimeService.createMessageCorrelation(DATA_COMPLETE_EVENT)
+        .processInstanceBusinessKey(businessKey)
+        .setVariables(Map.of(
+            VALIDATE_ONBOARDING_USER, DEFAULT_USER
+        ))
+        .correlate();
+  }
+
+  //  static AtomicInteger counter = new AtomicInteger(0);
+  private String createBusinessKey() {
+    return UUID.randomUUID().toString();
+//    return String.valueOf(counter.getAndIncrement());
+  }
+
+  /**
+   * Validates that the task was created and ready
+   * <p>TODO: fix issue with asserts</p>
+   * <p>TODO: fix issue with <code>task() == null</code> when running all class tests (this doesn't
+   * happen when running only one test)</p>
+   * <p>NOTE: as workaround: used await (different thread) to wait for it to be ready</p>
+   *
+   * @param processInstance
+   */
+  private void waitForTask(ProcessInstance processInstance) {
+    await()
+        .until(() -> task(processInstance) != null);
+    assertThat(task()).isNotNull();
   }
 
 }

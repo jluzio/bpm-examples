@@ -6,15 +6,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 import jakarta.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
+import org.camunda.bpm.engine.test.mock.Mocks;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -23,16 +22,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 @SpringBootTest
+@ExtendWith(ProcessEngineExtension.class)
 @Slf4j
 class StandaloneSpringBeanExpressionTest {
-
-  static Map<Object, Object> beans = new HashMap<>();
-
-  @RegisterExtension
-  ProcessEngineExtension extension = ProcessEngineExtension
-      .builder()
-      .useProcessEngine(TestBpmConfig.processEngine(beans))
-      .build();
 
   @Configuration
   @Import(TaskBean.class)
@@ -43,7 +35,7 @@ class StandaloneSpringBeanExpressionTest {
 
     @PostConstruct
     void init() {
-      beans.put("taskBean", taskBean);
+      Mocks.register("taskBean", taskBean);
     }
   }
 

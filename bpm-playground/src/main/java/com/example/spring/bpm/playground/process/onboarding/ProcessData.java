@@ -29,6 +29,7 @@ public class ProcessData {
     public static final String VALID = "valid";
     public static final String AGGREGATE_RESULT = "aggregateResult";
     public static final String FORM_KEY = "formKey";
+    public static final String VALIDATE_ONBOARDING_USER = "validateOnboardingUser";
   }
 
   @UtilityClass
@@ -37,7 +38,7 @@ public class ProcessData {
     public static final String STATUS_APPROVED = "APPROVED";
     public static final String STATUS_REJECTED = "REJECTED";
     public static final String AGGREGATE_RESULT_CLEAN = "CLEAN";
-    public static final String AGGREGATE_CLEAN_EDD = "CLEAN_EDD";
+    public static final String AGGREGATE_RESULT_CLEAN_EDD = "CLEAN_EDD";
     public static final String AGGREGATE_RESULT_RED_FLAGGED = "REDFLAGGED";
   }
 
