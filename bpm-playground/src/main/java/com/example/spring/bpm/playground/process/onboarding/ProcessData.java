@@ -21,11 +21,12 @@ public class ProcessData {
   @UtilityClass
   public static class VariableName {
 
-    public static final String VALIDATE_ONBOARDING_ENABLED = "validateOnboardingEnabled";
-    public static final String AML_HITS_ENABLED = "amlHitsEnabled";
+    public static final String REQUIRES_VALIDATE_ONBOARDING = "requiresValidateOnboarding";
+    public static final String REQUIRES_AML_HITS = "requiresAmlHits";
     public static final String STATUS = "status";
     public static final String VALID = "valid";
     public static final String AGGREGATE_RESULT = "aggregateResult";
+    public static final String FORM_KEY = "formKey";
   }
 
   @UtilityClass

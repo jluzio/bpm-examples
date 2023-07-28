@@ -81,7 +81,7 @@
     <bpmn:subProcess id="ValidateOnboarding" name="Validate Onboarding">
       <bpmn:incoming>Flow_0s485yu</bpmn:incoming>
       <bpmn:outgoing>Flow_14snrb3</bpmn:outgoing>
-      <bpmn:userTask id="ValidateOnboardingCustomerServiceAgentApproval" name="Customer Service Agent Approval" camunda:asyncBefore="true" camunda:candidateGroups="CSA">
+      <bpmn:userTask id="ValidateOnboardingCustomerServiceAgentApproval" name="Customer Service Agent Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:assignee="${validateOnboardingUser}" camunda:candidateGroups="CSA">
         <bpmn:documentation>Obtain tax information required from customer and open account manually in TC4</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
@@ -113,7 +113,7 @@
         <bpmn:outgoing>Flow_1b14y2b</bpmn:outgoing>
         <bpmn:outgoing>Flow_1913mik</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:userTask id="ValidateOnboardingComplianceCheckerApproval" name="Compliance Checker Approval" camunda:asyncBefore="true" camunda:candidateGroups="CC">
+      <bpmn:userTask id="ValidateOnboardingComplianceCheckerApproval" name="Compliance Checker Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:candidateGroups="CC">
         <bpmn:documentation>Obtain customer net worth statement and open account manually in TC4</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
@@ -128,7 +128,7 @@
         <bpmn:outgoing>Flow_0vhir3t</bpmn:outgoing>
         <bpmn:outgoing>Flow_0q7i3ae</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:userTask id="ValidateOnboardingComplianceMakerApproval" name="Compliance Maker Approval" camunda:asyncBefore="true" camunda:candidateGroups="CM">
+      <bpmn:userTask id="ValidateOnboardingComplianceMakerApproval" name="Compliance Maker Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:candidateGroups="CM">
         <bpmn:documentation>Obtain customer net worth statement and open account manually in TC4</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
@@ -143,7 +143,7 @@
         <bpmn:incoming>Flow_1913mik</bpmn:incoming>
         <bpmn:incoming>Flow_0hv2svl</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:serviceTask id="ValidateOnboardingDetermineProcessEnabled" name="Determine process enabled" camunda:expression="${assistedOnboardingProcessService.isValidateOnboardingEnabled(execution)}" camunda:resultVariable="validateOnboardingEnabled">
+      <bpmn:serviceTask id="ValidateOnboardingRequiresTaskCheck" name="Requires Task Check" camunda:expression="${assistedOnboardingProcessService.requiresValidateOnboarding(execution)}" camunda:resultVariable="requiresValidateOnboarding">
         <bpmn:incoming>Flow_0kj8pnj</bpmn:incoming>
         <bpmn:outgoing>Flow_1mr15sk</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -160,7 +160,7 @@
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status == 'PASS_TO_COMPLIANCE'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1k6kavn" name="Rejected" sourceRef="Gateway_0arw4lj" targetRef="ValidateOnboardingCustomerRejectedEndEvent" />
-      <bpmn:sequenceFlow id="Flow_0kj8pnj" sourceRef="Event_0od036w" targetRef="ValidateOnboardingDetermineProcessEnabled" />
+      <bpmn:sequenceFlow id="Flow_0kj8pnj" sourceRef="Event_0od036w" targetRef="ValidateOnboardingRequiresTaskCheck" />
       <bpmn:sequenceFlow id="Flow_1b14y2b" name="Rejected" sourceRef="Gateway_12pikeu" targetRef="ValidateOnboardingCustomerRejectedEndEvent" />
       <bpmn:sequenceFlow id="Flow_0vhir3t" name="Rejected&#10;" sourceRef="Gateway_1oyhxz9" targetRef="ValidateOnboardingCustomerRejectedEndEvent" />
       <bpmn:sequenceFlow id="Flow_00dqfve" sourceRef="ValidateOnboardingComplianceCheckerApproval" targetRef="Gateway_12pikeu" />
@@ -172,15 +172,15 @@
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1pgte5v" sourceRef="ValidateOnboardingComplianceMakerApproval" targetRef="Gateway_1oyhxz9" />
       <bpmn:sequenceFlow id="Flow_0hv2svl" name="Disabled" sourceRef="Gateway_11dx97o" targetRef="ValidateOnboardingCustomerApprovedEndEvent" />
-      <bpmn:sequenceFlow id="Flow_1mr15sk" sourceRef="ValidateOnboardingDetermineProcessEnabled" targetRef="Gateway_11dx97o" />
+      <bpmn:sequenceFlow id="Flow_1mr15sk" sourceRef="ValidateOnboardingRequiresTaskCheck" targetRef="Gateway_11dx97o" />
       <bpmn:sequenceFlow id="Flow_0mx2wcn" name="Enabled" sourceRef="Gateway_11dx97o" targetRef="ValidateOnboardingCustomerServiceAgentApproval">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validateOnboardingEnabled == true}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${requiresValidateOnboarding == true}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
     </bpmn:subProcess>
     <bpmn:subProcess id="AmlHits" name="AML Hits">
       <bpmn:incoming>Flow_0fw12dm</bpmn:incoming>
       <bpmn:outgoing>Flow_0zhdezr</bpmn:outgoing>
-      <bpmn:userTask id="AmlHitsCustomerServiceAgentApproval" name="Customer Service Agent Approval" camunda:asyncBefore="true" camunda:candidateGroups="CSA">
+      <bpmn:userTask id="AmlHitsCustomerServiceAgentApproval" name="Customer Service Agent Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:candidateGroups="CSA">
         <bpmn:documentation>Obtain tax information required from customer and open account manually in TC4</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
@@ -221,7 +221,7 @@
         <bpmn:outgoing>Flow_0qnlyvi</bpmn:outgoing>
         <bpmn:outgoing>Flow_0obauno</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:userTask id="AmlHitsComplianceCheckerApproval" name="Compliance Checker Approval" camunda:asyncBefore="true" camunda:candidateGroups="CC">
+      <bpmn:userTask id="AmlHitsComplianceCheckerApproval" name="Compliance Checker Approval" camunda:asyncBefore="true" camunda:formRef="${formKey}" camunda:formRefBinding="latest" camunda:candidateGroups="CC">
         <bpmn:documentation>Obtain customer net worth statement and open account manually in TC4</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
@@ -236,7 +236,7 @@
         <bpmn:outgoing>Flow_0nsc4gf</bpmn:outgoing>
         <bpmn:outgoing>Flow_1j5wuxq</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:userTask id="AmlHitsComplianceMakerApproval" name="Compliance Maker Approval" camunda:asyncBefore="true" camunda:candidateGroups="CM">
+      <bpmn:userTask id="AmlHitsComplianceMakerApproval" name="Compliance Maker Approval" camunda:asyncBefore="true" camunda:formRef="${formKey}" camunda:formRefBinding="latest" camunda:candidateGroups="CM">
         <bpmn:documentation>Obtain customer net worth statement and open account manually in TC4</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
@@ -270,7 +270,7 @@
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status == 'PASS_TO_COMPLIANCE'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1p110ux" name="Rejected" sourceRef="Gateway_11b8ohn" targetRef="AmlHitsCustomerRejectedEndEvent" />
-      <bpmn:sequenceFlow id="Flow_0guotd9" sourceRef="Event_09rrnzc" targetRef="AmlHitsDetermineProcessEnabled" />
+      <bpmn:sequenceFlow id="Flow_0guotd9" sourceRef="Event_09rrnzc" targetRef="RequiresAmlHitsCheck" />
       <bpmn:sequenceFlow id="Flow_0obauno" name="Rejected" sourceRef="Gateway_1hry4so" targetRef="AmlHitsCustomerRejectedEndEvent" />
       <bpmn:sequenceFlow id="Flow_0nsc4gf" name="Rejected&#10;" sourceRef="Gateway_0kqfn40" targetRef="AmlHitsCustomerRejectedEndEvent" />
       <bpmn:sequenceFlow id="Flow_194cqxx" sourceRef="AmlHitsComplianceCheckerApproval" targetRef="Gateway_1hry4so" />
@@ -278,8 +278,8 @@
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status== 'APPROVED'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1oysrit" sourceRef="AmlHitsComplianceMakerApproval" targetRef="Gateway_0kqfn40" />
-      <bpmn:sequenceFlow id="Flow_11xv6bj" sourceRef="AmlHitsDetermineProcessEnabled" targetRef="Gateway_11w451x" />
-      <bpmn:serviceTask id="AmlHitsDetermineProcessEnabled" name="Determine process enabled" camunda:expression="${assistedOnboardingProcessService.isAmlHitsEnabled(execution)}" camunda:resultVariable="amlHitsEnabled">
+      <bpmn:sequenceFlow id="Flow_11xv6bj" sourceRef="RequiresAmlHitsCheck" targetRef="Gateway_11w451x" />
+      <bpmn:serviceTask id="RequiresAmlHitsCheck" name="Requires Task Check" camunda:expression="${assistedOnboardingProcessService.requiresAmlHits(execution)}" camunda:resultVariable="requiresAmlHits">
         <bpmn:incoming>Flow_0guotd9</bpmn:incoming>
         <bpmn:outgoing>Flow_11xv6bj</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -289,7 +289,7 @@
         <bpmn:outgoing>Flow_088m25j</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_0boyzz0" name="Enabled" sourceRef="Gateway_11w451x" targetRef="AmlHitsReceiveResult">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${amlHitsEnabled == true}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${requiresAmlHits == true}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_088m25j" name="Disabled" sourceRef="Gateway_11w451x" targetRef="AmlHitsCustomerApprovedEndEvent" />
       <bpmn:receiveTask id="AmlHitsReceiveResult" name="Receive Callback" messageRef="Message_1nklia7">
@@ -498,7 +498,7 @@
           <dc:Bounds x="645" y="85" width="49" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_112wn75" bpmnElement="ValidateOnboardingDetermineProcessEnabled">
+      <bpmndi:BPMNShape id="BPMNShape_112wn75" bpmnElement="ValidateOnboardingRequiresTaskCheck">
         <dc:Bounds x="270" y="100" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
@@ -615,6 +615,12 @@
       <bpmndi:BPMNShape id="BPMNShape_1b6ccv1" bpmnElement="Gateway_01c7pn2">
         <dc:Bounds x="595" y="245" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0jsf2eb" bpmnElement="Event_09rrnzc">
+        <dc:Bounds x="132" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="124" y="223" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_14ruzby" bpmnElement="AmlHitsCustomerRejectedEndEvent">
         <dc:Bounds x="1244" y="482" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -639,18 +645,12 @@
           <dc:Bounds x="985" y="215" width="49" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0jsf2eb" bpmnElement="Event_09rrnzc">
-        <dc:Bounds x="132" y="252" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="124" y="223" width="54" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="Activity_1rktwzj_di" bpmnElement="RequiresAmlHitsCheck">
+        <dc:Bounds x="200" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_11w451x_di" bpmnElement="Gateway_11w451x" isMarkerVisible="true">
         <dc:Bounds x="335" y="245" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1rktwzj_di" bpmnElement="AmlHitsDetermineProcessEnabled">
-        <dc:Bounds x="200" y="230" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_04nhgt5_di" bpmnElement="AmlHitsReceiveResult">
         <dc:Bounds x="440" y="230" width="100" height="80" />
@@ -713,6 +713,10 @@
           <dc:Bounds x="738" y="476" width="44" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_03kyusr" bpmnElement="Flow_0guotd9">
+        <di:waypoint x="168" y="270" />
+        <di:waypoint x="200" y="270" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_0s8ux86" bpmnElement="Flow_0obauno">
         <di:waypoint x="1262" y="445" />
         <di:waypoint x="1262" y="482" />
@@ -743,6 +747,13 @@
         <di:waypoint x="930" y="420" />
         <di:waypoint x="985" y="420" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11xv6bj_di" bpmnElement="Flow_11xv6bj">
+        <di:waypoint x="300" y="270" />
+        <di:waypoint x="335" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="121" y="132" width="41" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0boyzz0_di" bpmnElement="Flow_0boyzz0">
         <di:waypoint x="385" y="270" />
         <di:waypoint x="440" y="270" />
@@ -762,17 +773,6 @@
       <bpmndi:BPMNEdge id="Flow_0f7xd2b_di" bpmnElement="Flow_0f7xd2b">
         <di:waypoint x="540" y="270" />
         <di:waypoint x="595" y="270" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_03kyusr" bpmnElement="Flow_0guotd9">
-        <di:waypoint x="168" y="270" />
-        <di:waypoint x="200" y="270" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_11xv6bj_di" bpmnElement="Flow_11xv6bj">
-        <di:waypoint x="300" y="270" />
-        <di:waypoint x="335" y="270" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="121" y="132" width="41" height="14" />
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

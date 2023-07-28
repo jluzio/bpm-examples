@@ -3,6 +3,7 @@ package com.example.spring.bpm.playground.process.onboarding;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.AML_HITS_RESULT_RECEIVED_EVENT;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.DATA_COMPLETE_EVENT;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.AGGREGATE_RESULT;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.FORM_KEY;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.STATUS;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
@@ -49,13 +50,14 @@ class OnboardingTest {
     String businessKey = UUID.randomUUID().toString();
     var processInstance = runtimeService.startProcessInstanceByKey(
         ProcessId.ONBOARDING,
-        businessKey
+        businessKey,
+        Map.of(FORM_KEY, "")
     );
     log.debug("{}", processInstance);
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
-    verify(processService).isAmlHitsEnabled(any());
+    verify(processService).requiresAmlHits(any());
 
     runtimeService.createMessageCorrelation(AML_HITS_RESULT_RECEIVED_EVENT)
         .processInstanceBusinessKey(businessKey)
@@ -69,10 +71,13 @@ class OnboardingTest {
 
     runtimeService.createMessageCorrelation(DATA_COMPLETE_EVENT)
         .processInstanceBusinessKey(businessKey)
+        .setVariables(Map.of(
+            "validateOnboardingUser", "admin"
+        ))
         .correlate();
     assertThat(processInstance)
         .isWaitingAt("ValidateOnboardingCustomerServiceAgentApproval");
-    verify(processService).isValidateOnboardingEnabled(any());
+    verify(processService).requiresValidateOnboarding(any());
 
     complete(task(), Map.of(
         STATUS, VariableValue.STATUS_APPROVED

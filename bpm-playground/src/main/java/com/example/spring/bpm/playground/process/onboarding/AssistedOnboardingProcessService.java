@@ -1,13 +1,12 @@
 package com.example.spring.bpm.playground.process.onboarding;
 
-import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.AML_HITS_ENABLED;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.REQUIRES_AML_HITS;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.VALID;
-import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.VALIDATE_ONBOARDING_ENABLED;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.REQUIRES_VALIDATE_ONBOARDING;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -20,7 +19,6 @@ public class AssistedOnboardingProcessService {
 
   public boolean validateProcess(DelegateExecution execution) {
     log.info("validateProcess :: {}", execution);
-//    setDefaultValueIfAbsent(execution, VALID, true);
     return getValue(execution, VALID, true);
   }
 
@@ -28,16 +26,14 @@ public class AssistedOnboardingProcessService {
     log.info("ingestCustomer :: {}", execution);
   }
 
-  public boolean isAmlHitsEnabled(DelegateExecution execution) {
-    log.info("isAmlHitsEnabled :: {}", execution);
-//    setDefaultValueIfAbsent(execution, AML_HITS_ENABLED, true);
-    return getValue(execution, AML_HITS_ENABLED, true);
+  public boolean requiresAmlHits(DelegateExecution execution) {
+    log.info("requiresAmlHits :: {}", execution);
+    return getValue(execution, REQUIRES_AML_HITS, true);
   }
 
-  public boolean isValidateOnboardingEnabled(DelegateExecution execution) {
-    log.info("isValidateOnboardingEnabled :: {}", execution);
-//    setDefaultValueIfAbsent(execution, VALIDATE_ONBOARDING_ENABLED, true);
-    return getValue(execution, VALIDATE_ONBOARDING_ENABLED, true);
+  public boolean requiresValidateOnboarding(DelegateExecution execution) {
+    log.info("requiresValidateOnboarding :: {}", execution);
+    return getValue(execution, REQUIRES_VALIDATE_ONBOARDING, true);
   }
 
   public void sendMessage(DelegateExecution execution, String messageName) {
