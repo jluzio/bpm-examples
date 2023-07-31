@@ -17,6 +17,7 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import com.example.spring.bpm.playground.process.onboarding.ProcessData.ProcessId;
@@ -66,6 +67,7 @@ class OnboardingTest {
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
     verify(processService).requiresAmlHits(any());
+    verify(processService).amlHitsCallCustomerScreening(any());
 
     sendAmlHitsResultReceivedEvent(businessKey, VariableValue.AGGREGATE_RESULT_CLEAN);
     assertThat(processInstance)
@@ -108,6 +110,7 @@ class OnboardingTest {
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT);
+    verify(processService, never()).amlHitsCallCustomerScreening(any());
 
     sendDataCompleteEvent(businessKey);
 
@@ -135,6 +138,7 @@ class OnboardingTest {
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT);
+    verify(processService, never()).amlHitsCallCustomerScreening(any());
 
     sendDataCompleteEvent(businessKey);
 
@@ -160,6 +164,7 @@ class OnboardingTest {
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT);
     verify(processService).amlHitsApprove(any());
+    verify(processService, never()).amlHitsCallCustomerScreening(any());
 
     sendDataCompleteEvent(businessKey);
     assertThat(processInstance)
@@ -192,6 +197,7 @@ class OnboardingTest {
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
+    verify(processService).amlHitsCallCustomerScreening(any());
 
     sendDataCompleteEvent(businessKey);
     verify(processService).validateOnboardingApprove(any());
@@ -226,6 +232,7 @@ class OnboardingTest {
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
+    verify(processService).amlHitsCallCustomerScreening(any());
 
     sendDataCompleteEvent(businessKey);
     verify(processService).validateOnboardingApprove(any());

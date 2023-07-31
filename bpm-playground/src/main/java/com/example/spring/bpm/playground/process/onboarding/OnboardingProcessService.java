@@ -42,6 +42,10 @@ public class OnboardingProcessService {
     log.info("validateOnboardingReject :: {}", execution);
   }
 
+  public void amlHitsCallCustomerScreening(DelegateExecution execution) {
+    log.info("amlHitsCallCustomerScreening :: {}", execution);
+  }
+
   public void amlHitsApprove(DelegateExecution execution) {
     log.info("amlHitsApprove :: {}", execution);
   }
