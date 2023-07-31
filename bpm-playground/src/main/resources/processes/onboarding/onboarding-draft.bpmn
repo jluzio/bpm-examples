@@ -84,10 +84,10 @@
       <bpmn:incoming>Flow_0s485yu</bpmn:incoming>
       <bpmn:outgoing>Flow_14snrb3</bpmn:outgoing>
       <bpmn:userTask id="ValidateOnboardingCustomerServiceAgentApproval" name="Customer Service Agent Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:assignee="${validateOnboardingUser}" camunda:candidateGroups="CSA">
-        <bpmn:documentation>Obtain tax information required from customer and open account manually in TC4</bpmn:documentation>
+        <bpmn:documentation>Validate Onboarding - Customer Service Agent Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlhitsCustomerServiceAgentHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="validateOnboardingCustomerServiceAgentHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0mx2wcn</bpmn:incoming>
@@ -108,10 +108,10 @@
         <bpmn:outgoing>Flow_1913mik</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:userTask id="ValidateOnboardingComplianceCheckerApproval" name="Compliance Checker Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:candidateGroups="CC">
-        <bpmn:documentation>Obtain customer net worth statement and open account manually in TC4</bpmn:documentation>
+        <bpmn:documentation>Validate Onboarding - Compliance Checker Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlhitsComplianceCheckerHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="validateOnboardingComplianceCheckerHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0q7i3ae</bpmn:incoming>
@@ -123,10 +123,10 @@
         <bpmn:outgoing>Flow_0q7i3ae</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:userTask id="ValidateOnboardingComplianceMakerApproval" name="Compliance Maker Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:candidateGroups="CM">
-        <bpmn:documentation>Obtain customer net worth statement and open account manually in TC4</bpmn:documentation>
+        <bpmn:documentation>Validate Onboarding - Compliance Maker Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlhitsComplianceMakerHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="validateOnboardingComplianceMakerHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_01xpcof</bpmn:incoming>
@@ -182,10 +182,10 @@
       <bpmn:incoming>Flow_0fw12dm</bpmn:incoming>
       <bpmn:outgoing>Flow_0zhdezr</bpmn:outgoing>
       <bpmn:userTask id="AmlHitsCustomerServiceAgentApproval" name="Customer Service Agent Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:candidateGroups="CSA">
-        <bpmn:documentation>Obtain tax information required from customer and open account manually in TC4</bpmn:documentation>
+        <bpmn:documentation>AML Hits - Customer Service Agent Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlhitsCustomerServiceAgentHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="amlHitsCustomerServiceAgentHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1d37vl8</bpmn:incoming>
@@ -212,10 +212,10 @@
         <bpmn:outgoing>Flow_0obauno</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:userTask id="AmlHitsComplianceCheckerApproval" name="Compliance Checker Approval" camunda:asyncBefore="true" camunda:formRef="${formKey}" camunda:formRefBinding="latest" camunda:candidateGroups="CC">
-        <bpmn:documentation>Obtain customer net worth statement and open account manually in TC4</bpmn:documentation>
+        <bpmn:documentation>AML Hits - Compliance Checker Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlhitsComplianceCheckerHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="amlHitsComplianceCheckerHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1j5wuxq</bpmn:incoming>
@@ -227,10 +227,10 @@
         <bpmn:outgoing>Flow_1j5wuxq</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:userTask id="AmlHitsComplianceMakerApproval" name="Compliance Maker Approval" camunda:asyncBefore="true" camunda:formRef="${formKey}" camunda:formRefBinding="latest" camunda:candidateGroups="CM">
-        <bpmn:documentation>Obtain customer net worth statement and open account manually in TC4</bpmn:documentation>
+        <bpmn:documentation>AML Hits - Compliance Maker Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlhitsComplianceMakerHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="amlHitsComplianceMakerHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1xdym2g</bpmn:incoming>
