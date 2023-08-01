@@ -14,7 +14,7 @@ public class ProcessData {
   @UtilityClass
   public class EventName {
 
-    public static final String AML_HITS_RESULT_RECEIVED_EVENT = "AmlHitsResultReceivedEvent";
+    public static final String AML_SCREENING_RESULT_RECEIVED_EVENT = "AmlScreeningResultReceivedEvent";
     public static final String DATA_COMPLETE_EVENT = "DataCompleteEvent";
     public static final String REJECTED_ERROR = "RejectedError";
     public static final String ERROR = "Error";
@@ -24,7 +24,7 @@ public class ProcessData {
   public static class VariableName {
 
     public static final String REQUIRES_VALIDATE_ONBOARDING = "requiresValidateOnboarding";
-    public static final String REQUIRES_AML_HITS = "requiresAmlHits";
+    public static final String REQUIRES_AML_SCREENING = "requiresAmlScreening";
     public static final String STATUS = "status";
     public static final String VALID = "valid";
     public static final String AGGREGATE_RESULT = "aggregateResult";

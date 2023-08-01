@@ -5,7 +5,7 @@
   </bpmn:collaboration>
   <bpmn:signal id="Signal_13tcb03" name="Signal_2qcsrc9" />
   <bpmn:signal id="Signal_0ni9r3g" name="Signal_1sah7qd" />
-  <bpmn:message id="Message_1nklia7" name="AmlHitsResultReceivedEvent" />
+  <bpmn:message id="Message_1nklia7" name="AmlScreeningResultReceivedEvent" />
   <bpmn:process id="onboarding" name="Onboarding" isExecutable="true">
     <bpmn:startEvent id="Event_1e9t260">
       <bpmn:outgoing>Flow_0imix9d</bpmn:outgoing>
@@ -69,10 +69,10 @@
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_0imix9d" sourceRef="Event_1e9t260" targetRef="Gateway_19yzgxw" />
     <bpmn:sequenceFlow id="Flow_03xl5b3" sourceRef="Gateway_19yzgxw" targetRef="Activity_076959u" />
-    <bpmn:sequenceFlow id="Flow_0fw12dm" sourceRef="Gateway_19yzgxw" targetRef="AmlHits" />
+    <bpmn:sequenceFlow id="Flow_0fw12dm" sourceRef="Gateway_19yzgxw" targetRef="AmlScreening" />
     <bpmn:sequenceFlow id="Flow_0s485yu" sourceRef="Activity_076959u" targetRef="ValidateOnboarding" />
     <bpmn:sequenceFlow id="Flow_14snrb3" sourceRef="ValidateOnboarding" targetRef="Gateway_1flr048" />
-    <bpmn:sequenceFlow id="Flow_0zhdezr" sourceRef="AmlHits" targetRef="Gateway_1flr048" />
+    <bpmn:sequenceFlow id="Flow_0zhdezr" sourceRef="AmlScreening" targetRef="Gateway_1flr048" />
     <bpmn:sequenceFlow id="Flow_1c94j2p" sourceRef="Gateway_1flr048" targetRef="ValidateProcess" />
     <bpmn:sequenceFlow id="Flow_19g2yph" sourceRef="Gateway_1vr2n7y" targetRef="IngestUser">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${valid == true}</bpmn:conditionExpression>
@@ -178,14 +178,14 @@
         <bpmn:messageEventDefinition id="MessageEventDefinition_18nqics" camunda:expression="${onboardingProcessService.validateOnboardingReject(execution)}" />
       </bpmn:endEvent>
     </bpmn:subProcess>
-    <bpmn:subProcess id="AmlHits" name="AML Hits">
+    <bpmn:subProcess id="AmlScreening" name="AML Screening">
       <bpmn:incoming>Flow_0fw12dm</bpmn:incoming>
       <bpmn:outgoing>Flow_0zhdezr</bpmn:outgoing>
-      <bpmn:userTask id="AmlHitsCustomerServiceAgentApproval" name="Customer Service Agent Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:candidateGroups="CSA">
-        <bpmn:documentation>AML Hits - Customer Service Agent Approval</bpmn:documentation>
+      <bpmn:userTask id="AmlScreeningCustomerServiceAgentApproval" name="Customer Service Agent Approval" camunda:asyncBefore="true" camunda:formKey="${formKey}" camunda:candidateGroups="CSA">
+        <bpmn:documentation>AML Screening - Customer Service Agent Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlHitsCustomerServiceAgentHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="amlScreeningCustomerServiceAgentHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1d37vl8</bpmn:incoming>
@@ -211,11 +211,11 @@
         <bpmn:outgoing>Flow_0qnlyvi</bpmn:outgoing>
         <bpmn:outgoing>Flow_0obauno</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:userTask id="AmlHitsComplianceCheckerApproval" name="Compliance Checker Approval" camunda:asyncBefore="true" camunda:formRef="${formKey}" camunda:formRefBinding="latest" camunda:candidateGroups="CC">
-        <bpmn:documentation>AML Hits - Compliance Checker Approval</bpmn:documentation>
+      <bpmn:userTask id="AmlScreeningComplianceCheckerApproval" name="Compliance Checker Approval" camunda:asyncBefore="true" camunda:formRef="${formKey}" camunda:formRefBinding="latest" camunda:candidateGroups="CC">
+        <bpmn:documentation>AML Screening - Compliance Checker Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlHitsComplianceCheckerHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="amlScreeningComplianceCheckerHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1j5wuxq</bpmn:incoming>
@@ -226,44 +226,44 @@
         <bpmn:outgoing>Flow_0nsc4gf</bpmn:outgoing>
         <bpmn:outgoing>Flow_1j5wuxq</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:userTask id="AmlHitsComplianceMakerApproval" name="Compliance Maker Approval" camunda:asyncBefore="true" camunda:formRef="${formKey}" camunda:formRefBinding="latest" camunda:candidateGroups="CM">
-        <bpmn:documentation>AML Hits - Compliance Maker Approval</bpmn:documentation>
+      <bpmn:userTask id="AmlScreeningComplianceMakerApproval" name="Compliance Maker Approval" camunda:asyncBefore="true" camunda:formRef="${formKey}" camunda:formRefBinding="latest" camunda:candidateGroups="CM">
+        <bpmn:documentation>AML Screening - Compliance Maker Approval</bpmn:documentation>
         <bpmn:extensionElements>
           <camunda:properties>
-            <camunda:property name="userTaskHandlerBeanName" value="amlHitsComplianceMakerHandler" />
+            <camunda:property name="userTaskHandlerBeanName" value="amlScreeningComplianceMakerHandler" />
           </camunda:properties>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1xdym2g</bpmn:incoming>
         <bpmn:outgoing>Flow_1oysrit</bpmn:outgoing>
       </bpmn:userTask>
-      <bpmn:sequenceFlow id="Flow_1d37vl8" name="High Risk" sourceRef="Gateway_01c7pn2" targetRef="AmlHitsCustomerServiceAgentApproval">
+      <bpmn:sequenceFlow id="Flow_1d37vl8" name="High Risk" sourceRef="Gateway_01c7pn2" targetRef="AmlScreeningCustomerServiceAgentApproval">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${aggregateResult == 'CLEAN_EDD'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_0o7yqpv" sourceRef="AmlHitsCustomerServiceAgentApproval" targetRef="Gateway_11b8ohn" />
-      <bpmn:sequenceFlow id="Flow_0ut0nu5" name="Red Flagged" sourceRef="Gateway_01c7pn2" targetRef="AmlHitsCustomerRedFlaggedEndEvent" />
-      <bpmn:sequenceFlow id="Flow_03cih2t" name="Approved" sourceRef="Gateway_11b8ohn" targetRef="AmlHitsCustomerApprovedEndEvent">
+      <bpmn:sequenceFlow id="Flow_0o7yqpv" sourceRef="AmlScreeningCustomerServiceAgentApproval" targetRef="Gateway_11b8ohn" />
+      <bpmn:sequenceFlow id="Flow_0ut0nu5" name="Red Flagged" sourceRef="Gateway_01c7pn2" targetRef="AmlScreeningCustomerRedFlaggedEndEvent" />
+      <bpmn:sequenceFlow id="Flow_03cih2t" name="Approved" sourceRef="Gateway_11b8ohn" targetRef="AmlScreeningCustomerApprovedEndEvent">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status == 'APPROVED'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_0sidl5h" name="Clean" sourceRef="Gateway_01c7pn2" targetRef="AmlHitsCustomerApprovedEndEvent">
+      <bpmn:sequenceFlow id="Flow_0sidl5h" name="Clean" sourceRef="Gateway_01c7pn2" targetRef="AmlScreeningCustomerApprovedEndEvent">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${aggregateResult == 'CLEAN'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_0qnlyvi" name="Approved" sourceRef="Gateway_1hry4so" targetRef="AmlHitsCustomerApprovedEndEvent">
+      <bpmn:sequenceFlow id="Flow_0qnlyvi" name="Approved" sourceRef="Gateway_1hry4so" targetRef="AmlScreeningCustomerApprovedEndEvent">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status == 'APPROVED'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_1xdym2g" name="Pass to Compliance" sourceRef="Gateway_11b8ohn" targetRef="AmlHitsComplianceMakerApproval">
+      <bpmn:sequenceFlow id="Flow_1xdym2g" name="Pass to Compliance" sourceRef="Gateway_11b8ohn" targetRef="AmlScreeningComplianceMakerApproval">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status == 'PASS_TO_COMPLIANCE'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_1p110ux" name="Rejected" sourceRef="Gateway_11b8ohn" targetRef="AmlHitsCustomerRejectedEndEvent" />
-      <bpmn:sequenceFlow id="Flow_0guotd9" sourceRef="Event_09rrnzc" targetRef="RequiresAmlHitsCheck" />
-      <bpmn:sequenceFlow id="Flow_0obauno" name="Rejected" sourceRef="Gateway_1hry4so" targetRef="AmlHitsCustomerRejectedEndEvent" />
-      <bpmn:sequenceFlow id="Flow_0nsc4gf" name="Rejected&#10;" sourceRef="Gateway_0kqfn40" targetRef="AmlHitsCustomerRejectedEndEvent" />
-      <bpmn:sequenceFlow id="Flow_194cqxx" sourceRef="AmlHitsComplianceCheckerApproval" targetRef="Gateway_1hry4so" />
-      <bpmn:sequenceFlow id="Flow_1j5wuxq" name="Approved" sourceRef="Gateway_0kqfn40" targetRef="AmlHitsComplianceCheckerApproval">
+      <bpmn:sequenceFlow id="Flow_1p110ux" name="Rejected" sourceRef="Gateway_11b8ohn" targetRef="AmlScreeningCustomerRejectedEndEvent" />
+      <bpmn:sequenceFlow id="Flow_0guotd9" sourceRef="Event_09rrnzc" targetRef="RequiresAmlScreeningCheck" />
+      <bpmn:sequenceFlow id="Flow_0obauno" name="Rejected" sourceRef="Gateway_1hry4so" targetRef="AmlScreeningCustomerRejectedEndEvent" />
+      <bpmn:sequenceFlow id="Flow_0nsc4gf" name="Rejected&#10;" sourceRef="Gateway_0kqfn40" targetRef="AmlScreeningCustomerRejectedEndEvent" />
+      <bpmn:sequenceFlow id="Flow_194cqxx" sourceRef="AmlScreeningComplianceCheckerApproval" targetRef="Gateway_1hry4so" />
+      <bpmn:sequenceFlow id="Flow_1j5wuxq" name="Approved" sourceRef="Gateway_0kqfn40" targetRef="AmlScreeningComplianceCheckerApproval">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status== 'APPROVED'}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_1oysrit" sourceRef="AmlHitsComplianceMakerApproval" targetRef="Gateway_0kqfn40" />
-      <bpmn:sequenceFlow id="Flow_11xv6bj" sourceRef="RequiresAmlHitsCheck" targetRef="Gateway_11w451x" />
-      <bpmn:serviceTask id="RequiresAmlHitsCheck" name="Requires Task Check" camunda:expression="${onboardingProcessService.requiresAmlHits(execution)}" camunda:resultVariable="requiresAmlHits">
+      <bpmn:sequenceFlow id="Flow_1oysrit" sourceRef="AmlScreeningComplianceMakerApproval" targetRef="Gateway_0kqfn40" />
+      <bpmn:sequenceFlow id="Flow_11xv6bj" sourceRef="RequiresAmlScreeningCheck" targetRef="Gateway_11w451x" />
+      <bpmn:serviceTask id="RequiresAmlScreeningCheck" name="Requires Task Check" camunda:expression="${onboardingProcessService.requiresAmlScreening(execution)}" camunda:resultVariable="requiresAmlScreening">
         <bpmn:incoming>Flow_0guotd9</bpmn:incoming>
         <bpmn:outgoing>Flow_11xv6bj</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -272,36 +272,36 @@
         <bpmn:outgoing>Flow_0boyzz0</bpmn:outgoing>
         <bpmn:outgoing>Flow_088m25j</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:sequenceFlow id="Flow_0boyzz0" name="true" sourceRef="Gateway_11w451x" targetRef="CallCustomerScreening">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${requiresAmlHits == true}</bpmn:conditionExpression>
+      <bpmn:sequenceFlow id="Flow_0boyzz0" name="true" sourceRef="Gateway_11w451x" targetRef="CallScreeningApi">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${requiresAmlScreening == true}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_088m25j" name="false" sourceRef="Gateway_11w451x" targetRef="AmlHitsCustomerApprovedEndEvent" />
-      <bpmn:receiveTask id="AmlHitsReceiveResult" name="Receive Callback" messageRef="Message_1nklia7">
+      <bpmn:sequenceFlow id="Flow_088m25j" name="false" sourceRef="Gateway_11w451x" targetRef="AmlScreeningCustomerApprovedEndEvent" />
+      <bpmn:receiveTask id="AmlScreeningReceiveResult" name="Receive Callback" messageRef="Message_1nklia7">
         <bpmn:incoming>Flow_0jjmevy</bpmn:incoming>
         <bpmn:outgoing>Flow_0f7xd2b</bpmn:outgoing>
       </bpmn:receiveTask>
-      <bpmn:sequenceFlow id="Flow_0f7xd2b" sourceRef="AmlHitsReceiveResult" targetRef="Gateway_01c7pn2" />
-      <bpmn:endEvent id="AmlHitsCustomerRedFlaggedEndEvent" name="Customer Red Flagged">
+      <bpmn:sequenceFlow id="Flow_0f7xd2b" sourceRef="AmlScreeningReceiveResult" targetRef="Gateway_01c7pn2" />
+      <bpmn:endEvent id="AmlScreeningCustomerRedFlaggedEndEvent" name="Customer Red Flagged">
         <bpmn:extensionElements />
         <bpmn:incoming>Flow_0ut0nu5</bpmn:incoming>
-        <bpmn:messageEventDefinition id="MessageEventDefinition_1xrmgxh" camunda:expression="${onboardingProcessService.amlHitsRedFlaggedReject(execution)}" />
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1xrmgxh" camunda:expression="${onboardingProcessService.amlScreeningRedFlaggedReject(execution)}" />
       </bpmn:endEvent>
-      <bpmn:endEvent id="AmlHitsCustomerApprovedEndEvent" name="Customer Approved">
+      <bpmn:endEvent id="AmlScreeningCustomerApprovedEndEvent" name="Customer Approved">
         <bpmn:extensionElements />
         <bpmn:incoming>Flow_03cih2t</bpmn:incoming>
         <bpmn:incoming>Flow_0sidl5h</bpmn:incoming>
         <bpmn:incoming>Flow_0qnlyvi</bpmn:incoming>
         <bpmn:incoming>Flow_088m25j</bpmn:incoming>
-        <bpmn:messageEventDefinition id="MessageEventDefinition_1lwqwfn" camunda:expression="${onboardingProcessService.amlHitsApprove(execution)}" />
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1lwqwfn" camunda:expression="${onboardingProcessService.amlScreeningApprove(execution)}" />
       </bpmn:endEvent>
-      <bpmn:endEvent id="AmlHitsCustomerRejectedEndEvent" name="Customer Rejected">
+      <bpmn:endEvent id="AmlScreeningCustomerRejectedEndEvent" name="Customer Rejected">
         <bpmn:incoming>Flow_1p110ux</bpmn:incoming>
         <bpmn:incoming>Flow_0obauno</bpmn:incoming>
         <bpmn:incoming>Flow_0nsc4gf</bpmn:incoming>
-        <bpmn:messageEventDefinition id="MessageEventDefinition_0hdgl5r" camunda:expression="${onboardingProcessService.amlHitsReject(execution)}" />
+        <bpmn:messageEventDefinition id="MessageEventDefinition_0hdgl5r" camunda:expression="${onboardingProcessService.amlScreeningReject(execution)}" />
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0jjmevy" sourceRef="CallCustomerScreening" targetRef="AmlHitsReceiveResult" />
-      <bpmn:serviceTask id="CallCustomerScreening" name="Call Customer Screening" camunda:expression="${onboardingProcessService.amlHitsCallCustomerScreening(execution)}">
+      <bpmn:sequenceFlow id="Flow_0jjmevy" sourceRef="CallScreeningApi" targetRef="AmlScreeningReceiveResult" />
+      <bpmn:serviceTask id="CallScreeningApi" name="Call Screening API" camunda:expression="${onboardingProcessService.amlScreeningCallScreeningApi(execution)}">
         <bpmn:incoming>Flow_0boyzz0</bpmn:incoming>
         <bpmn:outgoing>Flow_0jjmevy</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -410,7 +410,7 @@
         <dc:Bounds x="610" y="110" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_00eoi7f_di" bpmnElement="AmlHits">
+      <bpmndi:BPMNShape id="Activity_00eoi7f_di" bpmnElement="AmlScreening">
         <dc:Bounds x="510" y="320" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_07f6dk0_di" bpmnElement="Activity_076959u">
@@ -609,8 +609,8 @@
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1ejsgmj">
-    <bpmndi:BPMNPlane id="BPMNPlane_04jxj4f" bpmnElement="AmlHits">
-      <bpmndi:BPMNShape id="BPMNShape_0xlh88r" bpmnElement="AmlHitsCustomerServiceAgentApproval">
+    <bpmndi:BPMNPlane id="BPMNPlane_04jxj4f" bpmnElement="AmlScreening">
+      <bpmndi:BPMNShape id="BPMNShape_0xlh88r" bpmnElement="AmlScreeningCustomerServiceAgentApproval">
         <dc:Bounds x="710" y="380" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0cnsftv" bpmnElement="Gateway_11b8ohn">
@@ -619,54 +619,55 @@
       <bpmndi:BPMNShape id="BPMNShape_1b6ccv1" bpmnElement="Gateway_01c7pn2">
         <dc:Bounds x="735" y="245" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1dmyf8q" bpmnElement="Gateway_1hry4so" isMarkerVisible="true">
-        <dc:Bounds x="1377" y="395" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1xam6cv" bpmnElement="AmlHitsComplianceCheckerApproval">
-        <dc:Bounds x="1240" y="380" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0u6fyp0" bpmnElement="Gateway_0kqfn40" isMarkerVisible="true">
-        <dc:Bounds x="1125" y="395" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_107rkvc" bpmnElement="AmlHitsComplianceMakerApproval">
-        <dc:Bounds x="970" y="380" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1tw102p_di" bpmnElement="AmlHitsCustomerRedFlaggedEndEvent">
-        <dc:Bounds x="742" y="152" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="724" y="115" width="72" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_07a37vs_di" bpmnElement="AmlHitsCustomerApprovedEndEvent">
-        <dc:Bounds x="1132" y="252" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1165" y="226" width="49" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_10jeh0q_di" bpmnElement="AmlHitsCustomerRejectedEndEvent">
-        <dc:Bounds x="1384" y="482" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1427" y="487" width="49" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0jsf2eb" bpmnElement="Event_09rrnzc">
         <dc:Bounds x="162" y="252" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="154" y="223" width="54" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1rktwzj_di" bpmnElement="RequiresAmlHitsCheck">
+      <bpmndi:BPMNShape id="BPMNShape_1dmyf8q" bpmnElement="Gateway_1hry4so" isMarkerVisible="true">
+        <dc:Bounds x="1377" y="395" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1xam6cv" bpmnElement="AmlScreeningComplianceCheckerApproval">
+        <dc:Bounds x="1240" y="380" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0u6fyp0" bpmnElement="Gateway_0kqfn40" isMarkerVisible="true">
+        <dc:Bounds x="1125" y="395" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_107rkvc" bpmnElement="AmlScreeningComplianceMakerApproval">
+        <dc:Bounds x="970" y="380" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rktwzj_di" bpmnElement="RequiresAmlScreeningCheck">
         <dc:Bounds x="230" y="230" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_11w451x_di" bpmnElement="Gateway_11w451x" isMarkerVisible="true">
         <dc:Bounds x="365" y="245" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_04nhgt5_di" bpmnElement="AmlHitsReceiveResult">
+      <bpmndi:BPMNShape id="Activity_04nhgt5_di" bpmnElement="AmlScreeningReceiveResult">
         <dc:Bounds x="600" y="230" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1qp5ls2_di" bpmnElement="CallCustomerScreening">
+      <bpmndi:BPMNShape id="Event_1tw102p_di" bpmnElement="AmlScreeningCustomerRedFlaggedEndEvent">
+        <dc:Bounds x="742" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="724" y="115" width="72" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_07a37vs_di" bpmnElement="AmlScreeningCustomerApprovedEndEvent">
+        <dc:Bounds x="1132" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1165" y="226" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10jeh0q_di" bpmnElement="AmlScreeningCustomerRejectedEndEvent">
+        <dc:Bounds x="1384" y="482" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1427" y="487" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qp5ls2_di" bpmnElement="CallScreeningApi">
         <dc:Bounds x="460" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_18k5m6x" bpmnElement="Flow_1d37vl8">
         <di:waypoint x="760" y="295" />
@@ -679,6 +680,13 @@
         <di:waypoint x="810" y="420" />
         <di:waypoint x="845" y="420" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0teydk3" bpmnElement="Flow_0ut0nu5">
+        <di:waypoint x="760" y="245" />
+        <di:waypoint x="760" y="188" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="768" y="213" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_16qmmgj" bpmnElement="Flow_03cih2t">
         <di:waypoint x="870" y="395" />
         <di:waypoint x="870" y="340" />
@@ -686,6 +694,21 @@
         <di:waypoint x="1150" y="288" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="876" y="353" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1s6bhsr" bpmnElement="Flow_0sidl5h">
+        <di:waypoint x="785" y="270" />
+        <di:waypoint x="1132" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="805" y="273" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_10hgul5" bpmnElement="Flow_0qnlyvi">
+        <di:waypoint x="1402" y="395" />
+        <di:waypoint x="1402" y="270" />
+        <di:waypoint x="1168" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1407" y="338" width="47" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_0mogttb" bpmnElement="Flow_1xdym2g">
@@ -704,35 +727,9 @@
           <dc:Bounds x="878" y="473" width="44" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0f7xd2b_di" bpmnElement="Flow_0f7xd2b">
-        <di:waypoint x="700" y="270" />
-        <di:waypoint x="735" y="270" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_0teydk3" bpmnElement="Flow_0ut0nu5">
-        <di:waypoint x="760" y="245" />
-        <di:waypoint x="760" y="188" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="768" y="213" width="64" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_1s6bhsr" bpmnElement="Flow_0sidl5h">
-        <di:waypoint x="785" y="270" />
-        <di:waypoint x="1132" y="270" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="805" y="273" width="30" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_0o94v6n" bpmnElement="Flow_194cqxx">
-        <di:waypoint x="1340" y="420" />
-        <di:waypoint x="1377" y="420" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_10hgul5" bpmnElement="Flow_0qnlyvi">
-        <di:waypoint x="1402" y="395" />
-        <di:waypoint x="1402" y="270" />
-        <di:waypoint x="1168" y="270" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1407" y="338" width="47" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="BPMNEdge_03kyusr" bpmnElement="Flow_0guotd9">
+        <di:waypoint x="198" y="270" />
+        <di:waypoint x="230" y="270" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_0s8ux86" bpmnElement="Flow_0obauno">
         <di:waypoint x="1402" y="445" />
@@ -740,6 +737,18 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1418" y="443" width="44" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0yd7568" bpmnElement="Flow_0nsc4gf">
+        <di:waypoint x="1150" y="445" />
+        <di:waypoint x="1150" y="500" />
+        <di:waypoint x="1384" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1148" y="459" width="44" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0o94v6n" bpmnElement="Flow_194cqxx">
+        <di:waypoint x="1340" y="420" />
+        <di:waypoint x="1377" y="420" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_0y093d7" bpmnElement="Flow_1j5wuxq">
         <di:waypoint x="1175" y="420" />
@@ -752,12 +761,18 @@
         <di:waypoint x="1070" y="420" />
         <di:waypoint x="1125" y="420" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_0yd7568" bpmnElement="Flow_0nsc4gf">
-        <di:waypoint x="1150" y="445" />
-        <di:waypoint x="1150" y="500" />
-        <di:waypoint x="1384" y="500" />
+      <bpmndi:BPMNEdge id="Flow_11xv6bj_di" bpmnElement="Flow_11xv6bj">
+        <di:waypoint x="330" y="270" />
+        <di:waypoint x="365" y="270" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1148" y="459" width="44" height="27" />
+          <dc:Bounds x="121" y="132" width="41" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0boyzz0_di" bpmnElement="Flow_0boyzz0">
+        <di:waypoint x="415" y="270" />
+        <di:waypoint x="460" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="411" y="283" width="19" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_088m25j_di" bpmnElement="Flow_088m25j">
@@ -769,27 +784,13 @@
           <dc:Bounds x="398" y="183" width="23" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0boyzz0_di" bpmnElement="Flow_0boyzz0">
-        <di:waypoint x="415" y="270" />
-        <di:waypoint x="460" y="270" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="411" y="283" width="19" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="Flow_0f7xd2b_di" bpmnElement="Flow_0f7xd2b">
+        <di:waypoint x="700" y="270" />
+        <di:waypoint x="735" y="270" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0jjmevy_di" bpmnElement="Flow_0jjmevy">
         <di:waypoint x="560" y="270" />
         <di:waypoint x="600" y="270" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_03kyusr" bpmnElement="Flow_0guotd9">
-        <di:waypoint x="198" y="270" />
-        <di:waypoint x="230" y="270" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_11xv6bj_di" bpmnElement="Flow_11xv6bj">
-        <di:waypoint x="330" y="270" />
-        <di:waypoint x="365" y="270" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="121" y="132" width="41" height="14" />
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

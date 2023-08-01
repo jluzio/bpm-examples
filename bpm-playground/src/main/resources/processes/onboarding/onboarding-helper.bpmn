@@ -6,7 +6,7 @@
   <bpmn:message id="Message_11dm0oo" name="DataCompleteEvent" />
   <bpmn:collaboration id="Collaboration_1o0qosq">
     <bpmn:participant id="Participant_12s4gbv" name="DataCompleteEvent" processRef="SendDataCompleteEvent" />
-    <bpmn:participant id="Participant_063un0y" name="AmlHitsResultReceivedEvent" processRef="SendAmlHitsResultReceivedEvent" />
+    <bpmn:participant id="Participant_063un0y" name="AmlScreeningResultReceivedEvent" processRef="SendAmlScreeningResultReceivedEvent" />
   </bpmn:collaboration>
   <bpmn:process id="SendDataCompleteEvent" isExecutable="true">
     <bpmn:sequenceFlow id="Flow_0mlqbxv" sourceRef="Activity_0wsuaim" targetRef="Event_0e5m5c5" />
@@ -15,72 +15,72 @@
       <bpmn:incoming>Flow_0f6505y</bpmn:incoming>
       <bpmn:outgoing>Flow_0mlqbxv</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="Event_0e5m5c5">
-      <bpmn:incoming>Flow_0mlqbxv</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:startEvent id="Event_0eced6x">
       <bpmn:outgoing>Flow_0f6505y</bpmn:outgoing>
     </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0e5m5c5">
+      <bpmn:incoming>Flow_0mlqbxv</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
-  <bpmn:process id="SendAmlHitsResultReceivedEvent" isExecutable="true">
+  <bpmn:process id="SendAmlScreeningResultReceivedEvent" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_1jajxvt" sourceRef="Event_06a1dbs" targetRef="Activity_0gc4gv4" />
+    <bpmn:sequenceFlow id="Flow_1p6dbxf" sourceRef="Activity_0gc4gv4" targetRef="Event_0qvmgeb" />
+    <bpmn:serviceTask id="Activity_0gc4gv4" name="Send Message" camunda:expression="${onboardingHelperProcessService.sendMessage(execution, &#39;AmlScreeningResultReceivedEvent&#39;)}">
+      <bpmn:incoming>Flow_1jajxvt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1p6dbxf</bpmn:outgoing>
+    </bpmn:serviceTask>
     <bpmn:startEvent id="Event_06a1dbs">
       <bpmn:outgoing>Flow_1jajxvt</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:endEvent id="Event_0qvmgeb">
       <bpmn:incoming>Flow_1p6dbxf</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="Activity_0gc4gv4" name="Send Message" camunda:expression="${onboardingHelperProcessService.sendMessage(execution, &#39;AmlHitsResultReceivedEvent&#39;)}">
-      <bpmn:incoming>Flow_1jajxvt</bpmn:incoming>
-      <bpmn:outgoing>Flow_1p6dbxf</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1jajxvt" sourceRef="Event_06a1dbs" targetRef="Activity_0gc4gv4" />
-    <bpmn:sequenceFlow id="Flow_1p6dbxf" sourceRef="Activity_0gc4gv4" targetRef="Event_0qvmgeb" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1o0qosq">
       <bpmndi:BPMNShape id="Participant_12s4gbv_di" bpmnElement="Participant_12s4gbv" isHorizontal="true">
-        <dc:Bounds x="152" y="50" width="348" height="150" />
+        <dc:Bounds x="152" y="50" width="348" height="210" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0ztzrq8" bpmnElement="Activity_0wsuaim">
+        <dc:Bounds x="280" y="120" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0eced6x_di" bpmnElement="Event_0eced6x">
-        <dc:Bounds x="202" y="102" width="36" height="36" />
+        <dc:Bounds x="202" y="142" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0e5m5c5_di" bpmnElement="Event_0e5m5c5">
-        <dc:Bounds x="432" y="102" width="36" height="36" />
+        <dc:Bounds x="432" y="142" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0ztzrq8" bpmnElement="Activity_0wsuaim">
-        <dc:Bounds x="280" y="80" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0f6505y_di" bpmnElement="Flow_0f6505y">
-        <di:waypoint x="238" y="120" />
-        <di:waypoint x="280" y="120" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0mlqbxv_di" bpmnElement="Flow_0mlqbxv">
-        <di:waypoint x="380" y="120" />
-        <di:waypoint x="432" y="120" />
+        <di:waypoint x="380" y="160" />
+        <di:waypoint x="432" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f6505y_di" bpmnElement="Flow_0f6505y">
+        <di:waypoint x="238" y="160" />
+        <di:waypoint x="280" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="BPMNShape_09aixzk" bpmnElement="Participant_063un0y" isHorizontal="true">
-        <dc:Bounds x="560" y="50" width="348" height="150" />
+        <dc:Bounds x="560" y="50" width="348" height="210" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1d82u0h" bpmnElement="Activity_0gc4gv4">
+        <dc:Bounds x="698" y="110" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1i4do3k" bpmnElement="Event_06a1dbs">
-        <dc:Bounds x="610" y="102" width="36" height="36" />
+        <dc:Bounds x="610" y="132" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1v42icl" bpmnElement="Event_0qvmgeb">
-        <dc:Bounds x="840" y="102" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1d82u0h" bpmnElement="Activity_0gc4gv4">
-        <dc:Bounds x="698" y="80" width="100" height="80" />
-        <bpmndi:BPMNLabel />
+        <dc:Bounds x="840" y="132" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_1kd3xsm" bpmnElement="Flow_1jajxvt">
-        <di:waypoint x="646" y="120" />
-        <di:waypoint x="698" y="120" />
+        <di:waypoint x="646" y="150" />
+        <di:waypoint x="698" y="150" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_1gge81i" bpmnElement="Flow_1p6dbxf">
-        <di:waypoint x="798" y="120" />
-        <di:waypoint x="840" y="120" />
+        <di:waypoint x="798" y="150" />
+        <di:waypoint x="840" y="150" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

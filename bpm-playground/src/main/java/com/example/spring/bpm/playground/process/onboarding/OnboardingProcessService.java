@@ -1,6 +1,6 @@
 package com.example.spring.bpm.playground.process.onboarding;
 
-import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.REQUIRES_AML_HITS;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.REQUIRES_AML_SCREENING;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.REQUIRES_VALIDATE_ONBOARDING;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableName.VALID;
 import static java.util.Optional.ofNullable;
@@ -14,21 +14,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class OnboardingProcessService {
-
-  public boolean validateProcess(DelegateExecution execution) {
-    log.info("validateProcess :: {}", execution);
-    return getValue(execution, VALID, true);
-  }
-
-  public void ingestCustomer(DelegateExecution execution) {
-    log.info("ingestCustomer :: {}", execution);
-  }
-
-  public boolean requiresAmlHits(DelegateExecution execution) {
-    log.info("requiresAmlHits :: {}", execution);
-    return getValue(execution, REQUIRES_AML_HITS, true);
-  }
-
   public boolean requiresValidateOnboarding(DelegateExecution execution) {
     log.info("requiresValidateOnboarding :: {}", execution);
     return getValue(execution, REQUIRES_VALIDATE_ONBOARDING, true);
@@ -42,20 +27,34 @@ public class OnboardingProcessService {
     log.info("validateOnboardingReject :: {}", execution);
   }
 
-  public void amlHitsCallCustomerScreening(DelegateExecution execution) {
-    log.info("amlHitsCallCustomerScreening :: {}", execution);
+  public boolean requiresAmlScreening(DelegateExecution execution) {
+    log.info("requiresAmlScreening :: {}", execution);
+    return getValue(execution, REQUIRES_AML_SCREENING, true);
+  }
+  
+  public void amlScreeningCallScreeningApi(DelegateExecution execution) {
+    log.info("amlScreeningCallScreeningApi :: {}", execution);
   }
 
-  public void amlHitsApprove(DelegateExecution execution) {
-    log.info("amlHitsApprove :: {}", execution);
+  public void amlScreeningApprove(DelegateExecution execution) {
+    log.info("amlScreeningApprove :: {}", execution);
   }
 
-  public void amlHitsReject(DelegateExecution execution) {
-    log.info("amlHitsReject :: {}", execution);
+  public void amlScreeningReject(DelegateExecution execution) {
+    log.info("amlScreeningReject :: {}", execution);
   }
 
-  public void amlHitsRedFlaggedReject(DelegateExecution execution) {
-    log.info("amlHitsRedFlaggedReject :: {}", execution);
+  public void amlScreeningRedFlaggedReject(DelegateExecution execution) {
+    log.info("amlScreeningRedFlaggedReject :: {}", execution);
+  }
+
+  public boolean validateProcess(DelegateExecution execution) {
+    log.info("validateProcess :: {}", execution);
+    return getValue(execution, VALID, true);
+  }
+
+  public void ingestCustomer(DelegateExecution execution) {
+    log.info("ingestCustomer :: {}", execution);
   }
 
   public void processRejectedEvent(DelegateExecution execution) {

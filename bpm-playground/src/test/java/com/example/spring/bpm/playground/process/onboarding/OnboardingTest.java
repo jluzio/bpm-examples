@@ -1,6 +1,6 @@
 package com.example.spring.bpm.playground.process.onboarding;
 
-import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.AML_HITS_RESULT_RECEIVED_EVENT;
+import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.AML_SCREENING_RESULT_RECEIVED_EVENT;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.DATA_COMPLETE_EVENT;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.ERROR;
 import static com.example.spring.bpm.playground.process.onboarding.ProcessData.EventName.REJECTED_ERROR;
@@ -65,15 +65,15 @@ class OnboardingTest {
     log.debug("process[{}] :: {}", businessKey, processInstance);
 
     assertThat(processInstance)
-        .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
-    verify(processService).requiresAmlHits(any());
-    verify(processService).amlHitsCallCustomerScreening(any());
+        .isWaitingFor(DATA_COMPLETE_EVENT, AML_SCREENING_RESULT_RECEIVED_EVENT);
+    verify(processService).requiresAmlScreening(any());
+    verify(processService).amlScreeningCallScreeningApi(any());
 
-    sendAmlHitsResultReceivedEvent(businessKey, VariableValue.AGGREGATE_RESULT_CLEAN);
+    sendAmlScreeningResultReceivedEvent(businessKey, VariableValue.AGGREGATE_RESULT_CLEAN);
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT)
-        .hasPassed("AmlHitsCustomerApprovedEndEvent");
-    verify(processService).amlHitsApprove(any());
+        .hasPassed("AmlScreeningCustomerApprovedEndEvent");
+    verify(processService).amlScreeningApprove(any());
 
     sendDataCompleteEvent(businessKey);
     assertThat(processInstance)
@@ -98,7 +98,7 @@ class OnboardingTest {
   @Test
   void error_rejected_event() {
     doReturn(false)
-        .when(processService).requiresAmlHits(any());
+        .when(processService).requiresAmlScreening(any());
     doReturn(false)
         .when(processService).requiresValidateOnboarding(any());
     doThrow(new BpmnError(REJECTED_ERROR, "Rejected Error"))
@@ -110,7 +110,7 @@ class OnboardingTest {
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT);
-    verify(processService, never()).amlHitsCallCustomerScreening(any());
+    verify(processService, never()).amlScreeningCallScreeningApi(any());
 
     sendDataCompleteEvent(businessKey);
 
@@ -118,7 +118,7 @@ class OnboardingTest {
         .hasPassed("RejectedEndEvent")
         .isEnded();
     verify(processService).processRejectedEvent(any());
-    verify(processService).amlHitsApprove(any());
+    verify(processService).amlScreeningApprove(any());
     verify(processService).validateOnboardingApprove(any());
     verify(processService).validateProcess(any());
   }
@@ -126,7 +126,7 @@ class OnboardingTest {
   @Test
   void error_event() {
     doReturn(false)
-        .when(processService).requiresAmlHits(any());
+        .when(processService).requiresAmlScreening(any());
     doReturn(false)
         .when(processService).requiresValidateOnboarding(any());
     doThrow(new BpmnError(ERROR, "Some Error"))
@@ -138,7 +138,7 @@ class OnboardingTest {
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT);
-    verify(processService, never()).amlHitsCallCustomerScreening(any());
+    verify(processService, never()).amlScreeningCallScreeningApi(any());
 
     sendDataCompleteEvent(businessKey);
 
@@ -146,14 +146,14 @@ class OnboardingTest {
         .hasPassed("ErrorEndEvent")
         .isEnded();
     verify(processService).processErrorEvent(any());
-    verify(processService).amlHitsApprove(any());
+    verify(processService).amlScreeningApprove(any());
     verify(processService).validateOnboardingApprove(any());
   }
 
   @Test
   void fail_validate_onboarding_reject() {
     doReturn(false)
-        .when(processService).requiresAmlHits(any());
+        .when(processService).requiresAmlScreening(any());
     doReturn(false)
         .when(processService).validateProcess(any());
 
@@ -163,8 +163,8 @@ class OnboardingTest {
 
     assertThat(processInstance)
         .isWaitingFor(DATA_COMPLETE_EVENT);
-    verify(processService).amlHitsApprove(any());
-    verify(processService, never()).amlHitsCallCustomerScreening(any());
+    verify(processService).amlScreeningApprove(any());
+    verify(processService, never()).amlScreeningCallScreeningApi(any());
 
     sendDataCompleteEvent(businessKey);
     assertThat(processInstance)
@@ -196,23 +196,23 @@ class OnboardingTest {
     log.debug("process[{}] :: {}", businessKey, processInstance);
 
     assertThat(processInstance)
-        .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
-    verify(processService).amlHitsCallCustomerScreening(any());
+        .isWaitingFor(DATA_COMPLETE_EVENT, AML_SCREENING_RESULT_RECEIVED_EVENT);
+    verify(processService).amlScreeningCallScreeningApi(any());
 
     sendDataCompleteEvent(businessKey);
     verify(processService).validateOnboardingApprove(any());
 
-    sendAmlHitsResultReceivedEvent(businessKey, AGGREGATE_RESULT_CLEAN_EDD);
+    sendAmlScreeningResultReceivedEvent(businessKey, AGGREGATE_RESULT_CLEAN_EDD);
     assertThat(processInstance)
-        .isWaitingAt("AmlHitsCustomerServiceAgentApproval");
+        .isWaitingAt("AmlScreeningCustomerServiceAgentApproval");
 
     waitForTask(processInstance);
     complete(task(), Map.of(
         STATUS, VariableValue.STATUS_REJECTED
     ));
     assertThat(processInstance)
-        .hasPassed("AmlHitsCustomerRejectedEndEvent");
-    verify(processService).amlHitsReject(any());
+        .hasPassed("AmlScreeningCustomerRejectedEndEvent");
+    verify(processService).amlScreeningReject(any());
 
     assertThat(processInstance)
         .hasPassed("ValidateProcess", "OnboardingCustomerRejectedEndEvent")
@@ -231,16 +231,16 @@ class OnboardingTest {
     log.debug("process[{}] :: {}", businessKey, processInstance);
 
     assertThat(processInstance)
-        .isWaitingFor(DATA_COMPLETE_EVENT, AML_HITS_RESULT_RECEIVED_EVENT);
-    verify(processService).amlHitsCallCustomerScreening(any());
+        .isWaitingFor(DATA_COMPLETE_EVENT, AML_SCREENING_RESULT_RECEIVED_EVENT);
+    verify(processService).amlScreeningCallScreeningApi(any());
 
     sendDataCompleteEvent(businessKey);
     verify(processService).validateOnboardingApprove(any());
 
-    sendAmlHitsResultReceivedEvent(businessKey, AGGREGATE_RESULT_RED_FLAGGED);
+    sendAmlScreeningResultReceivedEvent(businessKey, AGGREGATE_RESULT_RED_FLAGGED);
     assertThat(processInstance)
-        .hasPassed("AmlHitsCustomerRedFlaggedEndEvent");
-    verify(processService).amlHitsRedFlaggedReject(any());
+        .hasPassed("AmlScreeningCustomerRedFlaggedEndEvent");
+    verify(processService).amlScreeningRedFlaggedReject(any());
 
     assertThat(processInstance)
         .hasPassed("ValidateProcess", "OnboardingCustomerRejectedEndEvent")
@@ -255,8 +255,8 @@ class OnboardingTest {
     );
   }
 
-  private void sendAmlHitsResultReceivedEvent(String businessKey, String value) {
-    runtimeService.createMessageCorrelation(AML_HITS_RESULT_RECEIVED_EVENT)
+  private void sendAmlScreeningResultReceivedEvent(String businessKey, String value) {
+    runtimeService.createMessageCorrelation(AML_SCREENING_RESULT_RECEIVED_EVENT)
         .processInstanceBusinessKey(businessKey)
         .setVariables(Map.of(
             AGGREGATE_RESULT, value
