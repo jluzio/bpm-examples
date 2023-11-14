@@ -38,8 +38,8 @@ class DmnEngineTest {
     DmnDecisionRuleResult result = results.getSingleResult();
     assertThat(result)
         .containsOnly(
-            entry("result", "notok"),
-            entry("reason", "you took too much man, you took too much!")
+            entry("result", "rejected"),
+            entry("reason", "Rejected by status and amount")
         );
 
     // Change input variables
@@ -54,8 +54,8 @@ class DmnEngineTest {
     result = results.getSingleResult();
     assertThat(result)
         .containsOnly(
-            entry("result", "ok"),
-            entry("reason", "you get anything you want")
+            entry("result", "accepted"),
+            entry("reason", "Accepted by high status")
         );
   }
 }
