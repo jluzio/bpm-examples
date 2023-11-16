@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.17.0">
+  <decision id="orderDecision" name="Check Order" camunda:historyTimeToLive="180">
+    <decisionTable id="decisionTable">
+      <input id="input1" label="Customer Status">
+        <inputExpression id="inputExpression1" typeRef="string">
+          <text>status</text>
+        </inputExpression>
+        <inputValues id="inputValues">
+          <text>"bronze","silver","gold"</text>
+        </inputValues>
+      </input>
+      <input id="input2" label="Order Sum">
+        <inputExpression id="inputExpression2" typeRef="double">
+          <text>sum</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_191sh76" label="High Amount Order">
+        <inputExpression id="LiteralExpression_0qpmt1y" typeRef="integer">
+          <text>highAmountOrder</text>
+        </inputExpression>
+      </input>
+      <output id="output1" label="Result" name="result" typeRef="string" biodi:width="192">
+        <outputValues id="outputValues">
+          <text>"accepted","rejected"</text>
+        </outputValues>
+      </output>
+      <output id="output2" label="Reason" name="reason" typeRef="string" />
+      <rule id="rule1">
+        <inputEntry id="inputEntry1">
+          <text>"bronze"</text>
+        </inputEntry>
+        <inputEntry id="inputEntry2">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0xpzxbh">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="outputEntry1">
+          <text>"rejected"</text>
+        </outputEntry>
+        <outputEntry id="outputEntry2">
+          <text>"Rejected by low status"</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule2">
+        <inputEntry id="inputEntry3">
+          <text>"silver"</text>
+        </inputEntry>
+        <inputEntry id="inputEntry4">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0yk96kq">
+          <text>&gt;= sum</text>
+        </inputEntry>
+        <outputEntry id="outputEntry3">
+          <text>"accepted"</text>
+        </outputEntry>
+        <outputEntry id="outputEntry4">
+          <text>"Accepted by status and amount"</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule3">
+        <inputEntry id="inputEntry5">
+          <text>"silver"</text>
+        </inputEntry>
+        <inputEntry id="inputEntry6">
+          <text>&lt;= 9000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1k6vber">
+          <text>&lt; sum</text>
+        </inputEntry>
+        <outputEntry id="outputEntry5">
+          <text>"rejected"</text>
+        </outputEntry>
+        <outputEntry id="outputEntry6">
+          <text>"Rejected by status and amount"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1rspp95">
+        <inputEntry id="UnaryTests_0xgoq6w">
+          <text>"silver"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1bptjwn">
+          <text>&gt; 9000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1i1f94e">
+          <text>&lt; sum</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1gp6qub">
+          <text>"rejected"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_1j0yeq4">
+          <text>"Rejected by OVER 9000! :: " + string(sum)</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule4">
+        <inputEntry id="inputEntry7">
+          <text>"gold"</text>
+        </inputEntry>
+        <inputEntry id="inputEntry8">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0fozj0k">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="outputEntry7">
+          <text>"accepted"</text>
+        </outputEntry>
+        <outputEntry id="outputEntry8">
+          <text>"Accepted by high status"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1l3bghs">
+      <dmndi:DMNShape id="DMNShape_0o10u2v" dmnElementRef="orderDecision">
+        <dc:Bounds height="80" width="180" x="150" y="80" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

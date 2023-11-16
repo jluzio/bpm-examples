@@ -20,7 +20,9 @@
       - https://docs.camunda.org/manual/7.16/user-guide/dmn-engine/testing/
   - Examples for 7.16 (use tag)
     - https://github.com/camunda/camunda-bpm-examples/tree/7.16
-
+  - FEEL
+    - https://camunda.github.io/feel-scala/docs/reference/
+    - https://docs.camunda.io/docs/components/modeler/feel/language-guide/feel-expressions-introduction/
 
 ## REST API
 - https://docs.camunda.org/manual/latest/reference/rest/

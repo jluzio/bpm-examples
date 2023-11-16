@@ -19,9 +19,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class DmnEngineTest {
 
   @Test
-  void shouldEvaluateDecision(DmnEngine dmnEngine) {
+  void simpleOrderDecision(DmnEngine dmnEngine) {
     // Parse decision
-    InputStream inputStream = getClass().getResourceAsStream("/decisions/Example.dmn");
+    InputStream inputStream = getClass().getResourceAsStream("/decisions/SimpleOrderExample.dmn");
     DmnDecision decision = dmnEngine.parseDecision("orderDecision", inputStream);
 
     // Set input variables
@@ -29,7 +29,7 @@ class DmnEngineTest {
         .putValue("status", "silver")
         .putValue("sum", 9000);
 
-    // Evaluate decision with id 'orderDecision' from file 'Example.dmn'
+    // Evaluate decision with id 'orderDecision' from file 'SimpleOrderExample.dmn'
     DmnDecisionTableResult results = dmnEngine.evaluateDecisionTable(decision, variables);
 
     // Check that one rule has matched
@@ -56,6 +56,32 @@ class DmnEngineTest {
         .containsOnly(
             entry("result", "accepted"),
             entry("reason", "Accepted by high status")
+        );
+  }
+
+  @Test
+  void advancedOrderDecision(DmnEngine dmnEngine) {
+    // Parse decision
+    InputStream inputStream = getClass().getResourceAsStream("/decisions/AdvancedOrderExample.dmn");
+    DmnDecision decision = dmnEngine.parseDecision("orderDecision", inputStream);
+
+    // Set input variables
+    VariableMap variables = Variables.createVariables()
+        .putValue("status", "silver")
+        .putValue("sum", 9999)
+        .putValue("highAmountOrder", 1000);
+
+    // Evaluate decision with id 'orderDecision' from file 'SimpleOrderExample.dmn'
+    DmnDecisionTableResult results = dmnEngine.evaluateDecisionTable(decision, variables);
+
+    // Check that one rule has matched
+    assertThat(results).hasSize(1);
+
+    DmnDecisionRuleResult result = results.getSingleResult();
+    assertThat(result)
+        .containsOnly(
+            entry("result", "rejected"),
+            entry("reason", "Rejected by OVER 9000! :: 9999")
         );
   }
 }
