@@ -1,22 +1,35 @@
 # Camunda BPMN
 
 ## Docs
-- https://docs.camunda.org/manual/7.19/
-  - https://docs.camunda.org/manual/7.19/user-guide/
-  - https://docs.camunda.org/manual/7.19/reference/bpmn20/
+- https://docs.camunda.org/manual/latest/
+  - https://docs.camunda.org/manual/latest/user-guide/
+  - https://docs.camunda.org/manual/latest/reference/bpmn20/
 - Testing
-  - https://docs.camunda.org/manual/7.19/user-guide/testing/
-  - https://docs.camunda.org/manual/7.19/user-guide/testing/assert-examples/
-  - https://docs.camunda.org/manual/7.19/user-guide/spring-boot-integration/develop-and-test/
+  - https://docs.camunda.org/manual/latest/user-guide/testing/
+  - https://docs.camunda.org/manual/latest/user-guide/testing/assert-examples/
+  - https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/develop-and-test/
     - NOTE: see issues with testing
+- Examples
+  - https://docs.camunda.org/manual/latest/examples/
+    - https://github.com/camunda/camunda-bpm-examples
+    - https://github.com/camunda-consulting/camunda-7-code-examples
+- Other versions (switch version on a specific page). 
+  - Docs for 7.16
+    - https://docs.camunda.org/manual/7.16/
+      - https://docs.camunda.org/manual/7.16/examples/
+      - https://docs.camunda.org/manual/7.16/user-guide/dmn-engine/testing/
+  - Examples for 7.16 (use tag)
+    - https://github.com/camunda/camunda-bpm-examples/tree/7.16
+
 
 ## REST API
-- https://docs.camunda.org/manual/7.19/reference/rest/
+- https://docs.camunda.org/manual/latest/reference/rest/
 - Check Download link:
+  - https://docs.camunda.org/rest/camunda-bpm-platform/7.21/
   - https://docs.camunda.org/rest/camunda-bpm-platform/7.19/
 
 ## Testing with SpringBoot
-https://docs.camunda.org/manual/7.19/user-guide/spring-boot-integration/develop-and-test/
+https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/develop-and-test/
 ~~~
 @SpringBootTest(
   // ...other parameters...
