@@ -21,15 +21,15 @@ class DmnEngineTest {
   @Test
   void simpleOrderDecision(DmnEngine dmnEngine) {
     // Parse decision
-    InputStream inputStream = getClass().getResourceAsStream("/decisions/SimpleOrderExample.dmn");
-    DmnDecision decision = dmnEngine.parseDecision("orderDecision", inputStream);
+    InputStream inputStream = getClass().getResourceAsStream("/decisions/SimpleOrderDecision.dmn");
+    DmnDecision decision = dmnEngine.parseDecision("simpleOrderDecision", inputStream);
 
     // Set input variables
     VariableMap variables = Variables.createVariables()
         .putValue("status", "silver")
         .putValue("sum", 9000);
 
-    // Evaluate decision with id 'orderDecision' from file 'SimpleOrderExample.dmn'
+    // Evaluate decision with id 'orderDecision' from file 'SimpleOrderDecision.dmn'
     DmnDecisionTableResult results = dmnEngine.evaluateDecisionTable(decision, variables);
 
     // Check that one rule has matched
@@ -62,8 +62,8 @@ class DmnEngineTest {
   @Test
   void advancedOrderDecision(DmnEngine dmnEngine) {
     // Parse decision
-    InputStream inputStream = getClass().getResourceAsStream("/decisions/AdvancedOrderExample.dmn");
-    DmnDecision decision = dmnEngine.parseDecision("orderDecision", inputStream);
+    InputStream inputStream = getClass().getResourceAsStream("/decisions/AdvancedOrderDecision.dmn");
+    DmnDecision decision = dmnEngine.parseDecision("advancedOrderDecision", inputStream);
 
     // Set input variables
     VariableMap variables = Variables.createVariables()
@@ -71,7 +71,7 @@ class DmnEngineTest {
         .putValue("sum", 9999)
         .putValue("highAmountOrder", 1000);
 
-    // Evaluate decision with id 'orderDecision' from file 'SimpleOrderExample.dmn'
+    // Evaluate decision with id 'orderDecision' from file 'SimpleOrderDecision.dmn'
     DmnDecisionTableResult results = dmnEngine.evaluateDecisionTable(decision, variables);
 
     // Check that one rule has matched

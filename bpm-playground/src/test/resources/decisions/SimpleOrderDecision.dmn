@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.17.0">
-  <decision id="orderDecision" name="Check Order" camunda:historyTimeToLive="180">
+  <decision id="simpleOrderDecision" name="Check Order" camunda:historyTimeToLive="180">
     <decisionTable id="decisionTable">
       <input id="input1" label="Customer Status">
         <inputExpression id="inputExpression1" typeRef="string">
@@ -81,7 +81,7 @@
   </decision>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="DMNDiagram_1l3bghs">
-      <dmndi:DMNShape id="DMNShape_0o10u2v" dmnElementRef="orderDecision">
+      <dmndi:DMNShape id="DMNShape_0o10u2v" dmnElementRef="simpleOrderDecision">
         <dc:Bounds height="80" width="180" x="150" y="80" />
       </dmndi:DMNShape>
     </dmndi:DMNDiagram>
