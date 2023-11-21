@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.17.0">
-  <decision id="advancedOrderDecision" name="Check Order" camunda:historyTimeToLive="180">
-    <decisionTable id="decisionTable">
-      <input id="input1" label="Customer Status">
+  <decision id="advancedExpressionsOrderDecision" name="Check Order" camunda:historyTimeToLive="180">
+    <decisionTable id="decisionTable" hitPolicy="FIRST">
+      <input id="input1" label="Customer Status" camunda:inputVariable="status">
         <inputExpression id="inputExpression1" typeRef="string">
-          <text>status</text>
+          <text></text>
         </inputExpression>
         <inputValues id="inputValues">
           <text>"bronze","silver","gold"</text>
         </inputValues>
       </input>
-      <input id="input2" label="Order Sum">
+      <input id="input2" label="Order Sum" camunda:inputVariable="sum">
         <inputExpression id="inputExpression2" typeRef="double">
-          <text>sum</text>
+          <text></text>
         </inputExpression>
       </input>
-      <input id="InputClause_191sh76" label="High Amount Order">
+      <input id="InputClause_191sh76" label="High Amount Order" camunda:inputVariable="highAmountOrder">
         <inputExpression id="LiteralExpression_0qpmt1y" typeRef="integer">
-          <text>highAmountOrder</text>
+          <text>getHighAmountOrder(status)</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_17l1f0j" label="Customers" camunda:inputVariable="customerNames">
+        <inputExpression id="LiteralExpression_1ec3ire" typeRef="string">
+          <text></text>
         </inputExpression>
       </input>
       <output id="output1" label="Result" name="result" typeRef="string" biodi:width="192">
@@ -36,11 +41,34 @@
         <inputEntry id="UnaryTests_0xpzxbh">
           <text></text>
         </inputEntry>
+        <inputEntry id="UnaryTests_04ejkdq">
+          <text></text>
+        </inputEntry>
         <outputEntry id="outputEntry1">
           <text>"rejected"</text>
         </outputEntry>
         <outputEntry id="outputEntry2">
           <text>"Rejected by low status"</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule3">
+        <inputEntry id="inputEntry5">
+          <text>"silver"</text>
+        </inputEntry>
+        <inputEntry id="inputEntry6">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1k6vber">
+          <text>&gt;= sum</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1fnelay">
+          <text>list contains(customerNames, "John Doe")</text>
+        </inputEntry>
+        <outputEntry id="outputEntry5">
+          <text>"rejected"</text>
+        </outputEntry>
+        <outputEntry id="outputEntry6">
+          <text>"Rejected by status and blocklist"</text>
         </outputEntry>
       </rule>
       <rule id="rule2">
@@ -53,6 +81,9 @@
         <inputEntry id="UnaryTests_0yk96kq">
           <text>&gt;= sum</text>
         </inputEntry>
+        <inputEntry id="UnaryTests_1bqkue2">
+          <text></text>
+        </inputEntry>
         <outputEntry id="outputEntry3">
           <text>"accepted"</text>
         </outputEntry>
@@ -60,20 +91,23 @@
           <text>"Accepted by status and amount"</text>
         </outputEntry>
       </rule>
-      <rule id="rule3">
-        <inputEntry id="inputEntry5">
+      <rule id="DecisionRule_1m33e4m">
+        <inputEntry id="UnaryTests_0owuoqv">
           <text>"silver"</text>
         </inputEntry>
-        <inputEntry id="inputEntry6">
-          <text>&lt;= 9000</text>
+        <inputEntry id="UnaryTests_02di2c6">
+          <text></text>
         </inputEntry>
-        <inputEntry id="UnaryTests_1k6vber">
+        <inputEntry id="UnaryTests_0ogkoos">
           <text>&lt; sum</text>
         </inputEntry>
-        <outputEntry id="outputEntry5">
+        <inputEntry id="UnaryTests_02fy7ms">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0pvt7eu">
           <text>"rejected"</text>
         </outputEntry>
-        <outputEntry id="outputEntry6">
+        <outputEntry id="LiteralExpression_1cwj4t6">
           <text>"Rejected by status and amount"</text>
         </outputEntry>
       </rule>
@@ -86,6 +120,9 @@
         </inputEntry>
         <inputEntry id="UnaryTests_1i1f94e">
           <text>&lt; sum</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0e9bdt0">
+          <text></text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1gp6qub">
           <text>"rejected"</text>
@@ -104,6 +141,9 @@
         <inputEntry id="UnaryTests_0fozj0k">
           <text></text>
         </inputEntry>
+        <inputEntry id="UnaryTests_07n29q1">
+          <text></text>
+        </inputEntry>
         <outputEntry id="outputEntry7">
           <text>"accepted"</text>
         </outputEntry>
@@ -115,7 +155,7 @@
   </decision>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="DMNDiagram_1l3bghs">
-      <dmndi:DMNShape id="DMNShape_0o10u2v" dmnElementRef="advancedOrderDecision">
+      <dmndi:DMNShape id="DMNShape_0o10u2v" dmnElementRef="advancedExpressionsOrderDecision">
         <dc:Bounds height="80" width="180" x="150" y="80" />
       </dmndi:DMNShape>
     </dmndi:DMNDiagram>
