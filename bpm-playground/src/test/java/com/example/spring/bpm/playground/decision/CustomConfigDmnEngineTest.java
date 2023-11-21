@@ -23,11 +23,12 @@ class CustomConfigDmnEngineTest {
 
   OrdersCustomFunctionProvider ordersCustomFunctionProvider = Mockito.spy(
       new OrdersCustomFunctionProvider());
-  DmnEngineConfiguration myConfiguration = new DefaultDmnEngineConfiguration()
+  DmnEngineConfiguration dmnEngineConfiguration = new DefaultDmnEngineConfiguration()
       .feelCustomFunctionProviders(List.of(ordersCustomFunctionProvider));
 
   @RegisterExtension
-  DmnEngineExtension dmnEngineExtension = DmnEngineExtension.forConfiguration(myConfiguration);
+  DmnEngineExtension dmnEngineExtension = DmnEngineExtension.forConfiguration(
+      dmnEngineConfiguration);
 
   @Test
   void advancedExpressionsOrderDecision(DmnEngine dmnEngine) {
