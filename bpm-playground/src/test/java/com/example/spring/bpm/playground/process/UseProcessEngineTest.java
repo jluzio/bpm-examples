@@ -39,7 +39,7 @@ class UseProcessEngineTest {
   }
 
   @Test
-  @Deployment(resources = "testProcess.bpmn")
+  @Deployment(resources = "processes/testProcess.bpmn")
   void testHappyPath() {
     // Given we create a new process instance
     ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("testProcess");

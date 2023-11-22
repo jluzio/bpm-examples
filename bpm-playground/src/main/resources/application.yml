@@ -3,6 +3,9 @@ logging:
     com.example: DEBUG
 
 camunda.bpm:
+  generic-properties.properties:
+    # [2023-11-22] required in 7.20 at the present time
+    historyTimeToLive: P30D
   admin-user:
     id: admin
     password: admin

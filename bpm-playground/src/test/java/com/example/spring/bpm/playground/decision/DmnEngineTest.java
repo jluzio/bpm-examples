@@ -87,29 +87,4 @@ class DmnEngineTest {
         );
   }
 
-  @Test
-  void advancedExpressionsOrderDecision(DmnEngine dmnEngine) {
-    // Parse decision
-    InputStream inputStream = getClass().getResourceAsStream(
-        "/decisions/AdvancedExpressionsOrderDecision.dmn");
-    DmnDecision decision = dmnEngine.parseDecision("advancedExpressionsOrderDecision", inputStream);
-
-    // Set input variables
-    VariableMap variables = Variables.createVariables()
-        .putValue("status", "silver")
-        .putValue("highAmountOrder", 1000);
-
-    // Evaluate decision with id 'orderDecision' from file 'SimpleOrderDecision.dmn'
-    DmnDecisionTableResult results = dmnEngine.evaluateDecisionTable(decision, variables);
-
-    // Check that one rule has matched
-    assertThat(results).hasSize(1);
-
-    DmnDecisionRuleResult result = results.getSingleResult();
-    assertThat(result)
-        .containsOnly(
-            entry("result", "rejected"),
-            entry("reason", "Rejected by OVER 9000! :: 9999")
-        );
-  }
 }

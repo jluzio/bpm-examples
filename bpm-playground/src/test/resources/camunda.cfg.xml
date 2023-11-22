@@ -6,7 +6,9 @@
 
   <bean id="processEngineConfiguration" class="org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
 
-    <property name="jdbcUrl" value="jdbc:h2:mem:camunda;DB_CLOSE_DELAY=1000" />
+<!--    <property name="jdbcUrl" value="jdbc:h2:mem:camunda;DB_CLOSE_DELAY=1000" />-->
+    <property name="jdbcUrl" value="jdbc:h2:mem:camunda;DB_CLOSE_ON_EXIT=FALSE" />
+<!--    <property name="jdbcUrl" value="jdbc:h2:mem:camunda" />-->
     <property name="jdbcDriver" value="org.h2.Driver" />
     <property name="jdbcUsername" value="sa" />
     <property name="jdbcPassword" value="" />
@@ -18,6 +20,8 @@
     <property name="jobExecutorActivate" value="false" />
 
     <property name="history" value="full" />
+    <!-- [2023-11-22] required in 7.20 at the present time -->
+    <property name="historyTimeToLive" value="P30D" />
 
     <!-- <property name="customPostBPMNParseListeners">
       <list>

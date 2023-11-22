@@ -5,6 +5,7 @@ import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeS
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
+import com.example.spring.bpm.playground.test.TestTags;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -12,6 +13,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
 import org.camunda.bpm.engine.test.mock.Mocks;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 @SpringBootTest
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
+@Tag(TestTags.NON_ISOLATED_TEST)
 class StandaloneSpringBeanExpressionTest {
 
   @Configuration

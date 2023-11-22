@@ -5,15 +5,19 @@ import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeS
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
+import com.example.spring.bpm.playground.test.TestTags;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.spring.boot.starter.CamundaBpmAutoConfiguration;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.stereotype.Component;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @SpringBootTest(classes = {
     CamundaBpmAutoConfiguration.class,
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Component;
 @AutoConfigureDataJdbc
 //@AutoConfigureDataJpa
 @Slf4j
+@Tag(TestTags.NON_ISOLATED_TEST)
 class SpringBeanExpressionTest {
 
   @Component("taskBean")

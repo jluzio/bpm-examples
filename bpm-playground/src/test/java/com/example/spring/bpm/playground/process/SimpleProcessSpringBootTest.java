@@ -4,16 +4,19 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complet
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.processInstanceQuery;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 
+import com.example.spring.bpm.playground.test.TestTags;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(properties = "process-bootstrap=false")
 @Slf4j
+@Tag(TestTags.NON_ISOLATED_TEST)
 class SimpleProcessSpringBootTest {
 
   @Autowired
