@@ -32,7 +32,7 @@
 
 ## Testing with SpringBoot
 https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/develop-and-test/
-~~~
+~~~java
 @SpringBootTest(
   // ...other parameters...
   properties = {
@@ -45,7 +45,7 @@ https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/develo
   }
 )
 ~~~
-~~~
+~~~java
   @Autowired
   ProcessEngine processEngine;  
 
@@ -53,6 +53,12 @@ https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/develo
   public void setUp() {
     init(processEngine);
   }
+~~~
+
+## Testing with H2
+As described in the testing page, should be able to show the database using something like:
+~~~
+org.h2.tools.Server.createWebServer("-web").start()
 ~~~
 
 ## Issues with testing
