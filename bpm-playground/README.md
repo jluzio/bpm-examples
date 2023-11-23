@@ -4,6 +4,8 @@
 - https://docs.camunda.org/manual/latest/
   - https://docs.camunda.org/manual/latest/user-guide/
   - https://docs.camunda.org/manual/latest/reference/bpmn20/
+- Expression Language
+  - https://docs.camunda.org/manual/latest/user-guide/process-engine/expression-language/
 - Testing
   - https://docs.camunda.org/manual/latest/user-guide/testing/
   - https://docs.camunda.org/manual/latest/user-guide/testing/assert-examples/
