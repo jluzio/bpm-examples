@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(properties = "process-bootstrap=false")
+@SpringBootTest
 @Slf4j
 @Tag(TestTags.NON_ISOLATED_TEST)
 class SimpleProcessSpringBootTest {

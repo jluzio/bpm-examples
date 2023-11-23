@@ -12,6 +12,3 @@ camunda.bpm:
     firstName: admin
   filter:
     create: All tasks
-
-app:
-  process-bootstrap: false
