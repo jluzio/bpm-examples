@@ -6,6 +6,7 @@ import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complet
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.taskQuery;
 
+import com.example.spring.bpm.playground.process.AbstractProcessTest;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -18,7 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
-class SubProcessesTest {
+class SubProcessesTest extends AbstractProcessTest {
 
   @Test
   @Deployment(resources = "processes/multiple/sub-processes.bpmn")

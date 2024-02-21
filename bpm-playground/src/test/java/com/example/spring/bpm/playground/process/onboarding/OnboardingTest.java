@@ -20,6 +20,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import com.example.spring.bpm.playground.process.AbstractProcessTest;
 import com.example.spring.bpm.playground.process.onboarding.ProcessData.ProcessId;
 import com.example.spring.bpm.playground.process.onboarding.ProcessData.VariableValue;
 import java.util.Map;
@@ -30,7 +31,6 @@ import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.spring.boot.starter.CamundaBpmAutoConfiguration;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Import;
 })
 @AutoConfigureDataJdbc
 @Slf4j
-class OnboardingTest {
+class OnboardingTest extends AbstractProcessTest {
 
   public static final String DEFAULT_USER = "admin";
 

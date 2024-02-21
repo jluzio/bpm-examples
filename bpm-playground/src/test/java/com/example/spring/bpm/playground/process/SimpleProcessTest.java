@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
-class SimpleProcessTest {
+class SimpleProcessTest extends AbstractProcessTest {
 
   @Test
   @Deployment(resources = "processes/simple.bpmn")

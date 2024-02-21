@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
-class ChoiceCustomUserProcessTest {
+class ChoiceCustomUserProcessTest extends AbstractProcessTest {
 
   enum Status { APPROVED, REJECTED }
 

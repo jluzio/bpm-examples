@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests;
+import org.camunda.bpm.engine.test.mock.Mocks;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Slf4j
 @Tag(TestTags.NON_ISOLATED_TEST)
-class SimpleProcessSpringBootTest {
+class SimpleProcessSpringBootTest extends AbstractProcessTest {
 
   @Autowired
   RuntimeService runtimeService;

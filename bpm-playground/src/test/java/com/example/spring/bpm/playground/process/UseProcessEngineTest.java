@@ -17,14 +17,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-/**
- * @author Ingo Richtsmeier
- */
-class UseProcessEngineTest {
+class UseProcessEngineTest extends AbstractProcessTest {
 
   private ProcessEngine usedProcessEngine = ProcessEngineConfiguration
       .createStandaloneInMemProcessEngineConfiguration()
-      .setJdbcUrl("jdbc:h2:mem:camunda;DB_CLOSE_DELAY=1000")
+      .setJdbcUrl("jdbc:h2:mem:camunda_custom;DB_CLOSE_ON_EXIT=TRUE")
       .buildProcessEngine();
 
   @RegisterExtension

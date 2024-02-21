@@ -5,6 +5,7 @@ import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.runtimeS
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 
+import com.example.spring.bpm.playground.process.AbstractProcessTest;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.junit5.ProcessEngineExtension;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
-class SeparateProcessesMessageTest {
+class SeparateProcessesMessageTest extends AbstractProcessTest {
 
   @Test
   @Deployment(resources = "processes/multiple/separate-processes-message.bpmn")

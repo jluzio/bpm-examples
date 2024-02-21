@@ -14,9 +14,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
-class ChoiceProcessTest {
+class ChoiceProcessTest extends AbstractProcessTest {
 
-  enum Status { APPROVED, REJECTED }
+  enum Status {APPROVED, REJECTED}
 
   @Test
   @Deployment(resources = "processes/choice.bpmn")

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @SpringBootTest
 @Import(SpringBeanExpressionIT.TaskBean.class)
 @Slf4j
-class SpringBeanExpressionIT {
+class SpringBeanExpressionIT extends AbstractProcessTest {
 
   @Component("taskBean")
   static class TaskBean implements JavaDelegate {

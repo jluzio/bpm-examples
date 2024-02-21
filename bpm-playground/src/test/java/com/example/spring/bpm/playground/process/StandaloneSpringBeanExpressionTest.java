@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @ExtendWith(ProcessEngineExtension.class)
 @Slf4j
 @Tag(TestTags.NON_ISOLATED_TEST)
-class StandaloneSpringBeanExpressionTest {
+class StandaloneSpringBeanExpressionTest extends AbstractProcessTest {
 
   @Configuration
   @Import(TaskBean.class)

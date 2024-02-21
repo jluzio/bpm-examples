@@ -2,6 +2,15 @@ logging:
   level:
     com.example: DEBUG
 
+#spring:
+#  datasource:
+#    url: jdbc:h2:mem:camunda_it;DB_CLOSE_ON_EXIT=TRUE
+#    username: sa
+#    password:
+#    driverClassName: org.h2.Driver
+#  jpa:
+#    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+
 camunda.bpm:
   generic-properties.properties:
     # [2023-11-22] required in 7.20 at the present time

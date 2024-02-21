@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @Slf4j
 @ExtendWith({ProcessEngineExtension.class, MockitoExtension.class})
-class ServiceTaskWithGatewayTest {
+class ServiceTaskWithGatewayTest extends AbstractProcessTest {
 
   public enum Result {
     ACCEPTED, REJECTED, ERROR;

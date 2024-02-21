@@ -15,19 +15,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-@SpringBootTest(classes = {
-    CamundaBpmAutoConfiguration.class,
-    SpringBeanExpressionTest.TaskBean.class
-})
+@SpringBootTest
 @AutoConfigureDataJdbc
 //@AutoConfigureDataJpa
 @Slf4j
 @Tag(TestTags.NON_ISOLATED_TEST)
-class SpringBeanExpressionTest {
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
+class SpringBeanExpressionTest extends AbstractProcessTest {
+
+  @Configuration
+  @Import({
+      CamundaBpmAutoConfiguration.class,
+      TaskBean.class
+  })
+  static class Config {
+
+  }
 
   @Component("taskBean")
   static class TaskBean implements JavaDelegate {

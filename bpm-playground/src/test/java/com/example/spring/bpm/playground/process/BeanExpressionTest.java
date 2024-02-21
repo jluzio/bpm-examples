@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @Slf4j
 @ExtendWith({ProcessEngineExtension.class, MockitoExtension.class})
-class BeanExpressionTest {
+class BeanExpressionTest extends AbstractProcessTest {
 
   static class TaskBean implements JavaDelegate {
 
