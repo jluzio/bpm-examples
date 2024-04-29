@@ -22,7 +22,8 @@ configurations {
 //apply plugin: 'io.spring.dependency-management'
 dependencyManagement {
 	imports {
-		mavenBom 'org.camunda.bpm:camunda-bom:7.20.0'
+		mavenBom 'org.camunda.bpm:camunda-bom:7.21.0'
+//		mavenBom 'org.camunda.bpm:camunda-bom:7.20.0'
 //		mavenBom 'org.camunda.bpm:camunda-bom:7.19.0'
 	}
 }
